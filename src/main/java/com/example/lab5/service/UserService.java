@@ -35,4 +35,12 @@ public class UserService implements UserDetailsService {
                 .roles("USER")
                 .build();
     }
+
+    public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

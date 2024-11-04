@@ -1,0 +1,12 @@
+-- -- Query to view all users
+-- SELECT
+--     id,
+--     username,
+--     password,
+--     email,
+--     created_at
+-- FROM
+--     users;
+
+-- -- Query to delete all users
+-- DELETE FROM users;

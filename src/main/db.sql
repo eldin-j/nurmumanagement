@@ -1,7 +1,7 @@
 -- Database: task_app
-
+--
 -- DROP DATABASE IF EXISTS task_app;
-
+--
 -- CREATE DATABASE task_app
 --     WITH
 --     OWNER = postgres
@@ -12,7 +12,7 @@
 --     TABLESPACE = pg_default
 --     CONNECTION LIMIT = -1
 --     IS_TEMPLATE = False;
-
+--
 -- -- Create the 'users' table
 -- CREATE TABLE users (
 --     id SERIAL PRIMARY KEY,
@@ -21,38 +21,45 @@
 --     email VARCHAR(100) NOT NULL UNIQUE,
 --     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 -- );
-
+--
 -- -- Create the 'categories' table
 -- CREATE TABLE categories (
 --     id SERIAL PRIMARY KEY,
 --     name VARCHAR(50) NOT NULL UNIQUE,
 --     description TEXT
 -- );
-
+--
+-- -- Insert predefined categories into 'categories'
+-- INSERT INTO categories (name, description) VALUES
+--     ('Work', 'Tasks related to work'),
+--     ('Personal', 'Personal tasks and errands'),
+--     ('Fitness', 'Fitness and health-related tasks'),
+--     ('Hobbies', 'Tasks related to hobbies and leisure activities');
+--
 -- -- Create the 'task_status' table (lookup table for task statuses)
 -- CREATE TABLE task_status (
 --     id SERIAL PRIMARY KEY,
 --     status VARCHAR(20) NOT NULL UNIQUE
 -- );
-
+--
 -- -- Insert predefined status values into 'task_status'
 -- INSERT INTO task_status (status) VALUES
 --     ('pending'),
 --     ('in_progress'),
 --     ('completed');
-
+--
 -- -- Create the 'task_priority' table (lookup table for task priorities)
 -- CREATE TABLE task_priority (
 --     id SERIAL PRIMARY KEY,
 --     priority VARCHAR(20) NOT NULL UNIQUE
 -- );
-
+--
 -- -- Insert predefined priority values into 'task_priority'
 -- INSERT INTO task_priority (priority) VALUES
 --     ('low'),
 --     ('medium'),
 --     ('high');
-
+--
 -- -- Create the 'tasks' table
 -- CREATE TABLE tasks (
 --     id SERIAL PRIMARY KEY,
@@ -64,12 +71,3 @@
 --     status_id INTEGER NOT NULL REFERENCES task_status(id),
 --     priority_id INTEGER NOT NULL REFERENCES task_priority(id)
 -- );
-
--- Query to select all users from the 'users' table
-SELECT 
-    id,
-    username,
-    email,
-    created_at
-FROM 
-    users;

@@ -15,8 +15,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/css/**").permitAll() // Permit these paths
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/signup", "/login", "/success", "/css/**").permitAll() // Permit these paths
                 .anyRequest().authenticated() // Require authentication for any other requests
             )
             .formLogin(form -> form
