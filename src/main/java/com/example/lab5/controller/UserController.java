@@ -1,8 +1,10 @@
 package com.example.lab5.controller;
 
 import com.example.lab5.model.User;
+import com.example.lab5.repository.UserRepository;
 import com.example.lab5.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,11 +12,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.security.core.Authentication;
+import jakarta.servlet.http.HttpSession;
+import java.util.Date;
+
 @Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/signup")
     public String showRegistrationForm(Model model) {
@@ -46,4 +55,20 @@ public class UserController {
     public String showLoginForm() {
         return "login";
     }
+
+    @GetMapping("/test-session")
+public String testSession(Model model, HttpSession session, Authentication authentication) {
+    if (authentication != null && authentication.isAuthenticated()) {
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("createdAt", user.getCreatedAt());
+        model.addAttribute("sessionId", session.getId());
+        model.addAttribute("sessionCreationTime", new Date(session.getCreationTime()));
+        model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
+    }
+    return "test-session";
+}
 }

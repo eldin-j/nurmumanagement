@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Test Page</title>
+</head>
+<body>
+<div>
+    <div>
+        <h1>Session Information</h1>
+
+        <div th:if="${username}">
+            <div>
+                <h2>User Details</h2>
+                <div>
+                    <p><span>Username:</span> <span th:text="${username}">username</span>
+                    </p>
+                    <p><span>Email:</span> <span
+                            th:text="${email}">email</span></p>
+                    <p><span>Account Created:</span> <span
+                            th:text="${#temporals.format(createdAt, 'dd-MM-yyyy HH:mm')}">date</span>
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <h2>Session Details</h2>
+                <div>
+                    <p><span>Session ID:</span> <span
+                            th:text="${sessionId}">id</span></p>
+                    <p><span>Created:</span> <span
+                            th:text="${#dates.format(sessionCreationTime, 'dd-MM-yyyy HH:mm')}">creation time</span>
+                    </p>
+                    <p><span>Last Accessed:</span> <span
+                            th:text="${#dates.format(sessionLastAccessedTime, 'dd-MM-yyyy HH:mm')}">last access</span>
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div th:unless="${username}">
+            <p>You are not logged in.</p>
+            <a href="/login">Login here</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
