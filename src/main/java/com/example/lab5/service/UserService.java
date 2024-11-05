@@ -18,15 +18,14 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Register a new user
     public void register(User user) {
-        // Hash the user's password
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-
-        // Save the user to the database
         userRepository.save(user);
     }
 
+    // Load user by username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -36,11 +35,19 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    // Check if a username already exists
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    // Check if an email already exists
     public boolean emailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    // Get a user by username
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

@@ -19,20 +19,23 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/signup", "/login", "/success", "/css/**").permitAll() // Permit these paths
-                .requestMatchers("/test-session").authenticated()
                 .anyRequest().authenticated() // Require authentication for any other requests
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/test-session", true)
+                .defaultSuccessUrl("/tasks", true)
                 .failureUrl("/login?error=true")
                 .permitAll() // Allow all to access the login page
             )
             .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll() // Allow all to access logout
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionUrl("/login?expired=true") // Redirect when session is invalid
                 .maximumSessions(1) // Limit to one session per user
                 .expiredUrl("/login?expired=true") // Redirect when session expires
             );

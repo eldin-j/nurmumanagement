@@ -44,7 +44,6 @@
 --
 -- -- Insert predefined status values into 'task_status'
 -- INSERT INTO task_status (status) VALUES
---     ('pending'),
 --     ('in_progress'),
 --     ('completed');
 --

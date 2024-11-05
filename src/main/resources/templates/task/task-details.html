@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Details</title>
+</head>
+<body>
+<div class="container">
+    <h1>Task Details</h1>
+
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">
+                Logout
+            </button>
+        </form>
+    </div>
+
+    <div>
+        <h2 th:text="${task.getTitle()}"></h2>
+        <p><strong>Description:</strong> <span
+                th:text="${task.getDescription()}"></span></p>
+        <p><strong>Due Date:</strong> <span
+                th:text="${task.getDueDate()}"></span>
+        </p>
+        <p><strong>Status:</strong> <span th:text="${task.getStatus()}"></span>
+        </p>
+        <p><strong>Priority:</strong> <span
+                th:text="${task.getPriority()}"></span></p>
+    </div>
+
+    <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}" class="btn">Edit
+        Task</a>
+    <a href="/tasks" class="btn">Back to Task List</a>
+</div>
+</body>
+</html>
