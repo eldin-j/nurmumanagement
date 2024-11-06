@@ -22,24 +22,31 @@
         </div>
     </nav>
 
-    <div>
+    <div class="task-details">
         <h1 th:text="${task.getTitle()}" class="task-title"></h1>
-        <p class="task-property"><strong>Description: </strong><span th:text="${task.getDescription()}"></span></p>
-        <p class="task-property"><strong>Due Date: </strong><span th:text="${task.getDueDate()}"></span></p>
-        <p class="task-property"><strong>Status: </strong><span th:text="${task.getStatus()}"></span></p>
-        <p class="task-property"><strong>Priority:</strong><span th:text="${task.getPriority()}"></span></p>
-    </div>
+        <p class="task-property"><strong>Description: </strong><span
+                th:text="${task.getDescription()}"></span></p>
+        <p class="task-property"><strong>Due Date: </strong><span
+                th:text="${task.getDueDate()}"></span></p>
+        <p class="task-property"><strong>Status: </strong><span
+                th:text="${task.getStatus()}"></span></p>
+        <p class="task-property"><strong>Priority: </strong><span
+                th:text="${task.getPriority()}"></span></p>
 
-    <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
-       class="btn btn-primary">Edit Task</a>
-<!--    TODO fix button displays even when task complete-->
-    <form th:if="${#strings.toLowerCase(task.getStatus())} != 'Completed'"
-          th:action="@{/tasks/complete/{id}(id=${task.getId()})}" method="post"
-          style="display:inline;">
-        <button type="submit" class="btn complete-btn">Complete Task</button>
-    </form>
-    <a th:href="@{/tasks/delete/{id}(id=${task.id})}" class="btn btn-danger"
-       onclick="return confirm('Are you sure? This action cannot be undone.');">Delete</a>
+        <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
+           class="btn btn-primary">Edit Task</a>
+        <!--    TODO fix button displays even when task complete-->
+        <form th:if="${#strings.toLowerCase(task.getStatus())} != 'Completed'"
+              th:action="@{/tasks/complete/{id}(id=${task.getId()})}"
+              method="post"
+              style="display:inline;">
+            <button type="submit" class="btn complete-btn">Complete Task
+            </button>
+        </form>
+        <a th:href="@{/tasks/delete/{id}(id=${task.id})}"
+           class="btn btn-danger"
+           onclick="return confirm('Are you sure? This action cannot be undone.');">Delete</a>
+    </div>
 
 </div>
 </body>
