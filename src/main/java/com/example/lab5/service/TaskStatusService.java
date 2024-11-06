@@ -24,6 +24,11 @@ public class TaskStatusService {
         return taskStatusRepository.findById(statusId);
     }
 
+    // Retrieve a task status by name
+    public Optional<TaskStatus> getStatusByName(String status) {
+        return taskStatusRepository.findByStatus(status);
+    }
+
     // Add a new task status
     public TaskStatus addStatus(TaskStatus taskStatus) {
         // Ensure status name is unique before saving

@@ -37,6 +37,9 @@
                 <div th:if="${param.error}" class="error-message">
                     <p>Incorrect username or password.</p>
                 </div>
+                <div th:if="${param.expired}" class="error-message">
+                    <p class="error">Your session has expired. Please log in again.</p>
+                </div>
             </div>
         </div>
     </div>

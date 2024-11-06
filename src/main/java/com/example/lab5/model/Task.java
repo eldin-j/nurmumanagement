@@ -14,7 +14,7 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String description;
 
     @Column(name = "due_date", nullable = false)

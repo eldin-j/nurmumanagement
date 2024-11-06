@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tasks")
@@ -53,6 +54,7 @@ public class TaskController {
         List<Category> categories = categoryService.getAllCategories();
         List<TaskStatus> statuses = taskStatusService.getAllStatuses();
 
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("tasks", tasks);
         model.addAttribute("categories", categories);
         model.addAttribute("statuses", statuses);
@@ -60,10 +62,13 @@ public class TaskController {
         return "task/task-list";
     }
 
-
+    // TODO add automatic task status assignment
     // Show the form to create a new task
     @GetMapping("/new")
-    public String showCreateTaskForm(Model model) {
+    public String showCreateTaskForm(Authentication authentication, Model model) {
+        User user = userService.getUserByUsername(authentication.getName());
+        model.addAttribute("username", user.getUsername());
+
         model.addAttribute("task", new Task());
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("statuses", taskStatusService.getAllStatuses());
@@ -75,9 +80,9 @@ public class TaskController {
     // Handle form submission for creating a new task
     @PostMapping
     public String createTask(@Valid @ModelAttribute("task") Task task,
-                           BindingResult result,
-                           Authentication authentication,
-                           Model model) {
+                             BindingResult result,
+                             Authentication authentication,
+                             Model model) {
         if (result.hasErrors()) {
             // Add necessary attributes for the form
             model.addAttribute("categories", categoryService.getAllCategories());
@@ -86,7 +91,7 @@ public class TaskController {
             return "task/task-edit";
         }
         User user = userService.getUserByUsername(authentication.getName());
-        if (task.getDueDate().isBefore(LocalDate.now())){
+        if (task.getDueDate().isBefore(LocalDate.now())) {
             result.rejectValue("dueDate", "error.task", "Due date must be in the future");
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("statuses", taskStatusService.getAllStatuses());
@@ -108,6 +113,7 @@ public class TaskController {
             return "redirect:/tasks";
         }
 
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("task", task);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("statuses", taskStatusService.getAllStatuses());
@@ -120,10 +126,10 @@ public class TaskController {
     // Handle form submission for editing a task
     @PostMapping("/edit/{id}")
     public String editTask(@PathVariable Long id,
-                         @Valid @ModelAttribute("task") Task updatedTask,
-                         BindingResult result,
-                         Authentication authentication,
-                         Model model) {
+                           @Valid @ModelAttribute("task") Task updatedTask,
+                           BindingResult result,
+                           Authentication authentication,
+                           Model model) {
         if (result.hasErrors()) {
             // Add necessary attributes for the form
             model.addAttribute("categories", categoryService.getAllCategories());
@@ -149,6 +155,24 @@ public class TaskController {
         existingTask.setPriority(updatedTask.getPriority());
 
         taskService.updateTask(id, existingTask, user);
+
+        return "redirect:/tasks";
+    }
+
+    @PostMapping("/complete/{id}")
+    public String completeTask(@PathVariable Long id, Authentication authentication) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Task task = taskService.getTaskByIdForUser(id, user).orElse(null);
+
+        // Ensure that the task belongs to the authenticated user
+        if (task != null && task.getUser() != null && task.getUser().equals(user)) {
+            Optional<TaskStatus> completedStatusOptional = taskStatusService.getStatusByName("Completed");
+            if (completedStatusOptional.isPresent()) {
+                TaskStatus completedStatus = completedStatusOptional.get();
+                task.setStatus(completedStatus);
+                taskService.updateTask(id, task, user);
+            }
+        }
 
         return "redirect:/tasks";
     }
@@ -179,6 +203,7 @@ public class TaskController {
             return "redirect:/tasks";
         }
 
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("task", task);
         return "task/task-details";
     }

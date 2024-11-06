@@ -2,39 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Details</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="navbar">
     <h1>Task management app</h1>
 </div>
 <div class="container">
-    <h1>Task Details</h1>
+    <nav id="navbar">
+        <a href="/tasks" class="btn back-btn">Back to Task List</a>
+        <div class="nav-brand">Nurmumanagement</div>
+        <div class="nav-user">
+            <span class="username" th:text="${username}"></span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn logout-btn">Logout</button>
+            </form>
+        </div>
+    </nav>
 
     <div>
-        <form th:action="@{/logout}" method="post">
-            <button type="submit">
-                Logout
-            </button>
-        </form>
+        <h1 th:text="${task.getTitle()}" class="task-title"></h1>
+        <p class="task-property"><strong>Description: </strong><span th:text="${task.getDescription()}"></span></p>
+        <p class="task-property"><strong>Due Date: </strong><span th:text="${task.getDueDate()}"></span></p>
+        <p class="task-property"><strong>Status: </strong><span th:text="${task.getStatus()}"></span></p>
+        <p class="task-property"><strong>Priority:</strong><span th:text="${task.getPriority()}"></span></p>
     </div>
 
-    <div>
-        <h2 th:text="${task.getTitle()}"></h2>
-        <p><strong>Description:</strong> <span
-                th:text="${task.getDescription()}"></span></p>
-        <p><strong>Due Date:</strong> <span
-                th:text="${task.getDueDate()}"></span>
-        </p>
-        <p><strong>Status:</strong> <span th:text="${task.getStatus()}"></span>
-        </p>
-        <p><strong>Priority:</strong> <span
-                th:text="${task.getPriority()}"></span></p>
-    </div>
+    <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
+       class="btn btn-primary">Edit Task</a>
+<!--    TODO fix button displays even when task complete-->
+    <form th:if="${#strings.toLowerCase(task.getStatus())} != 'Completed'"
+          th:action="@{/tasks/complete/{id}(id=${task.getId()})}" method="post"
+          style="display:inline;">
+        <button type="submit" class="btn complete-btn">Complete Task</button>
+    </form>
+    <a th:href="@{/tasks/delete/{id}(id=${task.id})}" class="btn btn-danger"
+       onclick="return confirm('Are you sure? This action cannot be undone.');">Delete</a>
 
-    <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}" class="btn">Edit
-        Task</a>
-    <a href="/tasks" class="btn">Back to Task List</a>
 </div>
 </body>
 </html>

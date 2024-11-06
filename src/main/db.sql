@@ -44,8 +44,8 @@
 --
 -- -- Insert predefined status values into 'task_status'
 -- INSERT INTO task_status (status) VALUES
---     ('in_progress'),
---     ('completed');
+--     ('In progress'),
+--     ('Completed');
 --
 -- -- Create the 'task_priority' table (lookup table for task priorities)
 -- CREATE TABLE task_priority (
@@ -55,15 +55,15 @@
 --
 -- -- Insert predefined priority values into 'task_priority'
 -- INSERT INTO task_priority (priority) VALUES
---     ('low'),
---     ('medium'),
---     ('high');
+--     ('Low'),
+--     ('Medium'),
+--     ('High');
 --
 -- -- Create the 'tasks' table
 -- CREATE TABLE tasks (
 --     id SERIAL PRIMARY KEY,
 --     title VARCHAR(100) NOT NULL,
---     description TEXT,
+--     description VARCHAR(1000),
 --     due_date DATE CHECK (due_date >= CURRENT_DATE),
 --     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 --     category_id INTEGER REFERENCES categories(id),
