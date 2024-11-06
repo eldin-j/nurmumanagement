@@ -1,23 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>User Login</h1>
-<form action="#" th:action="@{/login}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Login</button>
-</form>
-<p>Don't have an account? <a th:href="@{/signup}">Sign up here</a></p>
-<div th:if="${param.error}">
-    <p style="color:red;">Incorrect username or password.</p>
-</div>
+    <div class="auth-container">
+        <!-- Left side with app info -->
+        <div class="auth-info">
+            <div class="info-content">
+                <h1 class="app-title">Nurmumanagement</h1>
+                <p class="app-description">Manage your tasks with ease. Stay organized, focused, and productive with our intuitive task management solution.</p>
+            </div>
+        </div>
+
+        <!-- Right side with form -->
+        <div class="auth-form">
+            <div class="form-container">
+                <h2 class="form-title">Log in</h2>
+                <form action="#" th:action="@{/login}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Log in</button>
+                </form>
+                <div class="auth-links">
+                    <p>Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
+                </div>
+                <div th:if="${param.error}" class="error-message">
+                    <p>Incorrect username or password.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,29 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>User Registration</h1>
-<form action="#" th:action="@{/signup}" th:object="${user}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" th:field="*{username}" required>
-    <div th:if="${usernameError}">
-        <p style="color:red;" th:text="${usernameError}"></p>
+    <div class="auth-container">
+        <!-- Left side with app info -->
+        <div class="auth-info">
+            <div class="info-content">
+                <h1 class="app-title">Nurmumanagement</h1>
+                <p class="app-description">Begin your journey toward better organization. With Nurmumanagement, every goal becomes a step forward, and every moment is an opportunity to create.</p>
+            </div>
+        </div>
+
+        <!-- Right side with form -->
+        <div class="auth-form">
+            <div class="form-container">
+                <h2 class="form-title">Create Account</h2>
+                <form action="#" th:action="@{/signup}" th:object="${user}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" th:field="*{username}" required>
+                        <div th:if="${usernameError}" class="error-message">
+                            <p th:text="${usernameError}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" th:field="*{email}" required>
+                        <div th:if="${emailError}" class="error-message">
+                            <p th:text="${emailError}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" th:field="*{password}" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Sign up</button>
+                </form>
+                <div class="auth-links">
+                    <p>Already have an account? <a th:href="@{/login}">Log in</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-    <br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" th:field="*{email}" required>
-    <div th:if="${emailError}">
-        <p style="color:red;" th:text="${emailError}"></p>
-    </div>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" th:field="*{password}" required>
-    <br>
-    <button type="submit">Register</button>
-</form>
-<p>Already have an account? <a th:href="@{/login}">Login here</a></p>
 </body>
 </html>

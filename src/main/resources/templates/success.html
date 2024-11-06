@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Successful</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Registration Successful</h1>
-<p>Thank you for registering! You can now <a th:href="@{/login}">log in</a>.</p>
+    <div class="success-container">
+        <div class="success-content">
+            <h1>Registration Successful!</h1>
+            <p>Your account has been created successfully.</p>
+            <a href="/login" class="success-btn">Log in</a>
+        </div>
+    </div>
 </body>
 </html>
