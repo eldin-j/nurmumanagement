@@ -62,7 +62,6 @@ public class TaskController {
         return "task/task-list";
     }
 
-    // TODO add automatic task status assignment
     // Show the form to create a new task
     @GetMapping("/new")
     public String showCreateTaskForm(Authentication authentication, Model model) {
@@ -71,7 +70,7 @@ public class TaskController {
 
         model.addAttribute("task", new Task());
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("statuses", taskStatusService.getAllStatuses());
+//        model.addAttribute("statuses", taskStatusService.getAllStatuses());
         model.addAttribute("priorities", taskPriorityService.getAllPriorities());
 
         return "task/task-edit";
@@ -98,6 +97,19 @@ public class TaskController {
             model.addAttribute("priorities", taskPriorityService.getAllPriorities());
             return "task/task-edit";
         }
+
+        // Set default status for new tasks
+        Optional<TaskStatus> defaultStatusOptional = taskStatusService.getStatusByName("In progress");
+        if (defaultStatusOptional.isPresent()) {
+            task.setStatus(defaultStatusOptional.get());
+        } else {
+            result.rejectValue("status", "error.task", "Default status not found");
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("statuses", taskStatusService.getAllStatuses());
+            model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+            return "task/task-edit";
+        }
+
         taskService.createTask(task, user);
 
         return "redirect:/tasks";
@@ -159,17 +171,18 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    @PostMapping("/complete/{id}")
-    public String completeTask(@PathVariable Long id, Authentication authentication) {
+    @PostMapping("/{action}/{id}")
+    public String updateTaskStatus(@PathVariable String action, @PathVariable Long id, Authentication authentication) {
         User user = userService.getUserByUsername(authentication.getName());
         Task task = taskService.getTaskByIdForUser(id, user).orElse(null);
 
         // Ensure that the task belongs to the authenticated user
         if (task != null && task.getUser() != null && task.getUser().equals(user)) {
-            Optional<TaskStatus> completedStatusOptional = taskStatusService.getStatusByName("Completed");
-            if (completedStatusOptional.isPresent()) {
-                TaskStatus completedStatus = completedStatusOptional.get();
-                task.setStatus(completedStatus);
+            String statusName = action.equals("complete") ? "Completed" : "In progress";
+            Optional<TaskStatus> statusOptional = taskStatusService.getStatusByName(statusName);
+            if (statusOptional.isPresent()) {
+                TaskStatus status = statusOptional.get();
+                task.setStatus(status);
                 taskService.updateTask(id, task, user);
             }
         }

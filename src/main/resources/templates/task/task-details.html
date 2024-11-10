@@ -39,7 +39,14 @@
               th:action="@{/tasks/complete/{id}(id=${task.getId()})}"
               method="post"
               style="display:inline;">
-            <button type="submit" class="btn complete-btn">Complete Task
+            <button type="submit" class="btn action-btn complete-btn">Complete Task
+            </button>
+        </form>
+        <form th:if="${#strings.toLowerCase(task.getStatus()) == 'completed'}"
+              th:action="@{/tasks/incomplete/{id}(id=${task.getId()})}"
+              method="post"
+              style="display:inline;">
+            <button type="submit" class="btn action-btn incomplete-btn">Mark as Incomplete
             </button>
         </form>
         <a th:href="@{/tasks/delete/{id}(id=${task.id})}"

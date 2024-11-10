@@ -60,17 +60,6 @@
             </div>
 
             <div>
-                <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status" th:field="*{status.id}"
-                        required>
-                    <option value="">Select a status</option>
-                    <option th:each="status : ${statuses}"
-                            th:value="${status.id}"
-                            th:text="${status.getStatus()}"></option>
-                </select>
-            </div>
-
-            <div>
                 <label for="priority" class="form-label">Priority</label>
                 <select class="form-select" id="priority"
                         th:field="*{priority.id}"
