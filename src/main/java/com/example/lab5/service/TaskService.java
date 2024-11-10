@@ -87,6 +87,10 @@ public class TaskService {
         return taskRepository.findByUserAndStatusIdOrCategoryId(user, statusId, categoryId, pageable);
     }
 
+    public Page<Task> searchTasks(User user, String search, Pageable pageable) {
+        return taskRepository.findByUserAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(user, search, search, pageable);
+    }
+
     // Retrieve all tasks for a specific user with sorting by status and due date
     public Page<Task> getAllTasksForUserSorted(User user, Pageable pageable) {
         return taskRepository.findByUserOrderByStatusStatusDescDueDateAsc(user, pageable);

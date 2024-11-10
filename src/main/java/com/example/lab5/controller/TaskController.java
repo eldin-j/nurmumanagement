@@ -42,15 +42,18 @@ public class TaskController {
     public String listTasks(Authentication authentication, Model model,
                             @RequestParam(required = false) Long categoryId,
                             @RequestParam(required = false) Long statusId,
-                            @RequestParam(defaultValue = "0") int page) {
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) String search) {
         User user = userService.getUserByUsername(authentication.getName());
 
         int fixedSize = 6; // Set a fixed size for the page
         Pageable pageable = PageRequest.of(page, fixedSize);
         Page<Task> taskPage;
 
-        // Apply filtering if category or status IDs are provided
-        if (categoryId != null || statusId != null) {
+        // Apply filtering if category, status IDs, or search query are provided
+        if (search != null && !search.isEmpty()) {
+            taskPage = taskService.searchTasks(user, search, pageable);
+        } else if (categoryId != null || statusId != null) {
             taskPage = taskService.filterTasksByStatusOrCategory(user, statusId, categoryId, pageable);
         } else {
             taskPage = taskService.getAllTasksForUserSorted(user, pageable);
@@ -60,6 +63,7 @@ public class TaskController {
         model.addAttribute("tasks", taskPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", taskPage.getTotalPages());
+        model.addAttribute("search", search);
 
         return "task/task-list";
     }

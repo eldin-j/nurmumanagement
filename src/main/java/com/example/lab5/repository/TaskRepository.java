@@ -44,4 +44,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // Find tasks by user and sort by status and due date ascending
     Page<Task> findByUserOrderByStatusStatusDescDueDateAsc(User user, Pageable pageable);
+
+    // Find tasks by user and search query with pagination
+    Page<Task> findByUserAndTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(User user, String title, String description, Pageable pageable);
 }

@@ -20,14 +20,23 @@
 <div class="container">
     <div>
         <div class="header-actions">
-            <h1 class="page-title">Your Tasks <span class="page-counter" th:text="'(' + (${currentPage + 1}) + '/' + ${totalPages} + ')'"></span></h1>
+            <h1 class="page-title">Tasks
+                <span class="page-counter" th:if="${!#lists.isEmpty(tasks)}" th:text="'(' + (${currentPage + 1}) + '/' + ${totalPages} + ')'"></span>
+            </h1>
+            <form th:action="@{/tasks}" method="get" class="search-form">
+                <input type="text" name="search" placeholder="Search tasks..." th:value="${search}" class="search-input">
+                <button type="submit" class="btn scroll-page-btn">Search</button>
+            </form>
             <form th:action="@{/tasks/new}" method="get">
-                <button type="submit" class="btn btn-primary">Create New Task
-                </button>
+                <button type="submit" class="btn btn-primary">Create New Task</button>
             </form>
         </div>
 
-        <table class="task-table">
+        <div th:if="${#lists.isEmpty(tasks)}" class="error-message">
+            <p class="error">No tasks found for the search query.</p>
+        </div>
+
+        <table class="task-table" th:if="${!#lists.isEmpty(tasks)}">
             <thead>
             <tr>
                 <th class="table-cell">Title</th>
@@ -58,8 +67,8 @@
         <!-- Pagination controls -->
         <div class="pagination">
             <div>
-                <a th:if="${currentPage > 0}" th:href="@{/tasks(page=${currentPage - 1})}" class="btn scroll-page-btn">Previous</a>
-                <a th:if="${currentPage < totalPages - 1}" th:href="@{/tasks(page=${currentPage + 1})}" class="btn scroll-page-btn">Next</a>
+                <a th:if="${currentPage > 0}" th:href="@{/tasks(page=${currentPage - 1}, search=${search})}" class="btn scroll-page-btn">Previous</a>
+                <a th:if="${currentPage < totalPages - 1}" th:href="@{/tasks(page=${currentPage + 1}, search=${search})}" class="btn scroll-page-btn">Next</a>
             </div>
         </div>
     </div>
