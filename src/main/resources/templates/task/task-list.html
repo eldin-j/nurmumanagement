@@ -20,7 +20,7 @@
 <div class="container">
     <div>
         <div class="header-actions">
-            <h1 class="page-title">Your Tasks</h1>
+            <h1 class="page-title">Your Tasks <span class="page-counter" th:text="'(' + (${currentPage + 1}) + '/' + ${totalPages} + ')'"></span></h1>
             <form th:action="@{/tasks/new}" method="get">
                 <button type="submit" class="btn btn-primary">Create New Task
                 </button>
@@ -54,6 +54,14 @@
             </tr>
             </tbody>
         </table>
+
+        <!-- Pagination controls -->
+        <div class="pagination">
+            <div>
+                <a th:if="${currentPage > 0}" th:href="@{/tasks(page=${currentPage - 1})}" class="btn scroll-page-btn">Previous</a>
+                <a th:if="${currentPage < totalPages - 1}" th:href="@{/tasks(page=${currentPage + 1})}" class="btn scroll-page-btn">Next</a>
+            </div>
+        </div>
     </div>
 </div>
 </body>

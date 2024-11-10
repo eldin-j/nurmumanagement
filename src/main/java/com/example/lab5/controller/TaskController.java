@@ -1,12 +1,14 @@
 package com.example.lab5.controller;
 
-import com.example.lab5.model.Category;
 import com.example.lab5.model.Task;
 import com.example.lab5.model.TaskStatus;
 import com.example.lab5.model.User;
 import com.example.lab5.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -40,24 +41,25 @@ public class TaskController {
     @GetMapping
     public String listTasks(Authentication authentication, Model model,
                             @RequestParam(required = false) Long categoryId,
-                            @RequestParam(required = false) Long statusId) {
+                            @RequestParam(required = false) Long statusId,
+                            @RequestParam(defaultValue = "0") int page) {
         User user = userService.getUserByUsername(authentication.getName());
-        List<Task> tasks;
+
+        int fixedSize = 6; // Set a fixed size for the page
+        Pageable pageable = PageRequest.of(page, fixedSize);
+        Page<Task> taskPage;
 
         // Apply filtering if category or status IDs are provided
         if (categoryId != null || statusId != null) {
-            tasks = taskService.filterTasksByStatusOrCategory(user, statusId, categoryId);
+            taskPage = taskService.filterTasksByStatusOrCategory(user, statusId, categoryId, pageable);
         } else {
-            tasks = taskService.getAllTasksForUser(user);
+            taskPage = taskService.getAllTasksForUserSorted(user, pageable);
         }
 
-        List<Category> categories = categoryService.getAllCategories();
-        List<TaskStatus> statuses = taskStatusService.getAllStatuses();
-
         model.addAttribute("username", user.getUsername());
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("categories", categories);
-        model.addAttribute("statuses", statuses);
+        model.addAttribute("tasks", taskPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", taskPage.getTotalPages());
 
         return "task/task-list";
     }

@@ -1,9 +1,11 @@
 package com.example.lab5.repository;
 
-import com.example.lab5.model.Task;
-import com.example.lab5.model.User;
 import com.example.lab5.model.Category;
+import com.example.lab5.model.Task;
 import com.example.lab5.model.TaskStatus;
+import com.example.lab5.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -33,4 +35,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // Find tasks by user and filter by priority (optional for additional filtering functionality)
     List<Task> findByUserAndPriorityId(User user, Long priorityId);
+
+    // Find tasks by user with pagination
+    Page<Task> findByUser(User user, Pageable pageable);
+
+    // Find tasks by user, status, and category with pagination
+    Page<Task> findByUserAndStatusIdOrCategoryId(User user, Long statusId, Long categoryId, Pageable pageable);
+
+    // Find tasks by user and sort by status and due date ascending
+    Page<Task> findByUserOrderByStatusStatusDescDueDateAsc(User user, Pageable pageable);
 }

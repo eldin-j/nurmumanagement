@@ -6,6 +6,8 @@ import com.example.lab5.repository.TaskRepository;
 import com.example.lab5.repository.TaskStatusRepository;
 import com.example.lab5.repository.TaskPriorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +75,21 @@ public class TaskService {
     // Filter tasks by status or category for a specific user
     public List<Task> filterTasksByStatusOrCategory(User user, Long statusId, Long categoryId) {
         return taskRepository.findByUserAndStatusIdOrCategoryId(user, statusId, categoryId);
+    }
+
+    // Retrieve all tasks for a specific user with pagination
+    public Page<Task> getAllTasksForUser(User user, Pageable pageable) {
+        return taskRepository.findByUser(user, pageable);
+    }
+
+    // Filter tasks by status or category for a specific user with pagination
+    public Page<Task> filterTasksByStatusOrCategory(User user, Long statusId, Long categoryId, Pageable pageable) {
+        return taskRepository.findByUserAndStatusIdOrCategoryId(user, statusId, categoryId, pageable);
+    }
+
+    // Retrieve all tasks for a specific user with sorting by status and due date
+    public Page<Task> getAllTasksForUserSorted(User user, Pageable pageable) {
+        return taskRepository.findByUserOrderByStatusStatusDescDueDateAsc(user, pageable);
     }
 
     // Utility method: Validate that the due date is not in the past
