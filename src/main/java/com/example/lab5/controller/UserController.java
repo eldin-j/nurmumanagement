@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/signup")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "signup";
+        return "auth/signup";
     }
 
     // Handle form submission for user registration
@@ -50,13 +50,13 @@ public class UserController {
     // Show the success page after registration
     @GetMapping("/success")
     public String showSuccessPage() {
-        return "success";
+        return "auth/success";
     }
 
     // Show the login form
     @GetMapping("/login")
     public String showLoginForm() {
-        return "login";
+        return "auth/login";
     }
 
     // For testing session management
@@ -73,6 +73,6 @@ public class UserController {
             model.addAttribute("sessionCreationTime", new Date(session.getCreationTime()));
             model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
         }
-        return "test-session";
+        return "auth/test-session";
     }
 }

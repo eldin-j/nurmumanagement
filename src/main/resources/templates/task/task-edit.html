@@ -22,9 +22,8 @@
     </nav>
 
     <div class="task-details">
-<!--        TODO fix 'Edit Task' even on creation-->
-        <h1 th:if="${task == null}" class="task-title">Create Task</h1>
-        <h1 th:if="${task != null}" class="task-title">Edit Task</h1>
+        <h1 th:if="${task.getTitle() == null}" class="task-title">Create Task</h1>
+        <h1 th:if="${task.getTitle() != null}" class="task-title">Edit Task</h1>
 
         <form th:action="@{/tasks}" method="post" th:object="${task}">
             <input type="hidden" th:field="*{id}">

@@ -35,8 +35,7 @@
 
         <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
            class="btn btn-primary">Edit Task</a>
-        <!--    TODO fix button displays even when task complete-->
-        <form th:if="${#strings.toLowerCase(task.getStatus())} != 'Completed'"
+        <form th:if="${#strings.toLowerCase(task.getStatus()) != 'completed'}"
               th:action="@{/tasks/complete/{id}(id=${task.getId()})}"
               method="post"
               style="display:inline;">
