@@ -10,7 +10,9 @@
 <nav id="navbar">
     <div class="nav-brand">Nurmumanagement</div>
     <div class="nav-user">
-        <span class="username" th:text="${username}"></span>
+        <a href="/profile" class="username">
+            <span class="username" th:text="${username}"></span>
+        </a>
         <form th:action="@{/logout}" method="post">
             <button type="submit" class="btn logout-btn">Logout</button>
         </form>

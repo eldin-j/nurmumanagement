@@ -174,6 +174,15 @@ input:focus {
     color: var(--color-error);
 }
 
+.success-message {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background-color: #d1fae5;
+    border: 1px solid var(--color-success);
+    border-radius: 0.375rem;
+    color: var(--color-success);
+}
+
 /* Success page */
 .success-container {
     display: flex;
@@ -307,6 +316,11 @@ input:focus {
     color: white;
     font-size: var(--font-md);
     font-weight: 500;
+    text-decoration: none
+}
+
+.username:hover {
+    text-decoration: underline;
 }
 
 .logout-btn {
@@ -561,7 +575,7 @@ input:focus {
     border-radius: var(--radius-md);
     font-size: var(--font-md);
     transition: border-color 0.2s;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .form-control:focus {
@@ -645,4 +659,63 @@ input:focus {
 
 .incomplete-btn:hover {
     background-color: var(--color-warning-hover);
+}
+
+.profile-details {
+    max-width: 40vw;
+    margin: var(--spacing-lg) auto 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-lg);
+}
+
+.profile-property {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-text-primary);
+    font-size: var(--font-lg);
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+}
+
+.attribute-container {
+    display: flex;
+    align-items: center;
+}
+
+.attribute-container span {
+    margin-right: var(--spacing-xs);
+}
+
+.edit-page-btn {
+    background-color: var(--color-table-header);
+    color: var(--color-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    font-weight: 700;
+    flex-shrink: 0; /* Prevent the button from shrinking */
+    height: 2rem; /* Set the maximum height of the button */
+    overflow: hidden; /* Hide overflow content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+.edit-page-btn:hover {
+    background-color: var(--color-text-primary);
+    color: white;
+    opacity: 0.5;
+}
+
+.hidden {
+    display: none;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: var(--spacing-sm) 0;
 }

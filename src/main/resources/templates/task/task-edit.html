@@ -7,20 +7,19 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div class="navbar">
-    <h1>Task management app</h1>
-</div>
-<div class="container">
-    <nav id="navbar">
-        <div class="nav-brand">Nurmumanagement</div>
-        <div class="nav-user">
+<nav id="navbar">
+    <div class="nav-brand">Nurmumanagement</div>
+    <div class="nav-user">
+        <a href="/profile" class="username">
             <span class="username" th:text="${username}"></span>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="btn logout-btn">Logout</button>
-            </form>
-        </div>
-    </nav>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn logout-btn">Logout</button>
+        </form>
+    </div>
+</nav>
 
+<div class="container">
     <div class="task-details">
         <h1 th:if="${task.getTitle() == null}" class="task-title">Create Task</h1>
         <h1 th:if="${task.getTitle() != null}" class="task-title">Edit Task</h1>

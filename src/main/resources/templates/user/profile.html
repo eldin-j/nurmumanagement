@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/profile.js"></script>
+</head>
+<body>
+<nav id="navbar">
+    <a href="/tasks" class="btn back-btn">Back to Task List</a>
+    <div class="nav-brand">Nurmumanagement</div>
+    <div class="nav-user">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn logout-btn">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="profile-details">
+        <h1 class="task-title">Account settings</h1>
+
+        <div class="profile-property">
+            <div class="attribute-container">
+                <span><strong>Username: </strong></span><span th:text="${user.username}"></span>
+            </div>
+            <button class="btn edit-page-btn" onclick="toggleEditForm(this, 'username-form')">edit</button>
+        </div>
+        <form id="username-form" class="hidden" th:action="@{/profile/edit-username}" method="post">
+            <input type="text" name="newUsername" th:value="${user.username}" class="form-control">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <hr>
+
+        <div class="profile-property">
+            <div class="attribute-container">
+                <span><strong>Email: </strong></span><span th:text="${user.email}"></span>
+            </div>
+            <button class="btn edit-page-btn" onclick="toggleEditForm(this, 'email-form')">edit</button>
+        </div>
+        <form id="email-form" class="hidden" th:action="@{/profile/edit-email}" method="post">
+            <input type="email" name="newEmail" th:value="${user.email}" class="form-control">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <hr>
+
+        <div class="profile-property">
+            <div class="attribute-container">
+                <span><strong>Password: </strong></span>
+            </div>
+            <button class="btn edit-page-btn" onclick="togglePasswordForm(this, 'password-form')">change password</button>
+        </div>
+        <form id="password-form" class="hidden" th:action="@{/profile/edit-password}" method="post">
+            <input type="password" name="currentPassword" placeholder="Current password" class="form-control">
+            <input type="password" name="newPassword" placeholder="New password" class="form-control">
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+
+        <div th:if="${param.invalidPassword}" class="error-message">
+            <p class="error">Current password did not match. Please try again.</p>
+        </div>
+        <div th:if="${param.editSuccess}" class="success-message">
+            <p class="error">Account credentials updated successfully!</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

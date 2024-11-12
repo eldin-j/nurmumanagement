@@ -40,6 +40,10 @@
                 <div th:if="${param.expired}" class="error-message">
                     <p class="error">Your session has expired. Please log in again.</p>
                 </div>
+                <div th:if="${param.editSuccess}" class="success-message">
+                    <p class="error">Account credentials updated successfully! </p>
+                    <p class="error">Please log in again.</p>
+                </div>
             </div>
         </div>
     </div>

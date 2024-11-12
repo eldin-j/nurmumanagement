@@ -25,6 +25,21 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    // Update user details
+    public void update(User user) {
+        userRepository.save(user);
+    }
+
+    // Encode a password
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    // Check if a password is correct
+    public boolean checkPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
     // Load user by username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

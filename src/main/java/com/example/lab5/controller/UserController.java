@@ -37,8 +37,7 @@ public class UserController {
         if (userService.usernameExists(user.getUsername())) {
             redirectAttributes.addFlashAttribute("usernameError", "Username already exists");
             return "redirect:/signup";
-        }
-        else if (userService.emailExists(user.getEmail())) {
+        } else if (userService.emailExists(user.getEmail())) {
             redirectAttributes.addFlashAttribute("emailError", "Email already exists");
             return "redirect:/signup";
         }
@@ -74,5 +73,58 @@ public class UserController {
             model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
         }
         return "auth/test-session";
+    }
+
+    // Show the user profile
+    @GetMapping("/profile")
+    public String showProfile(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            model.addAttribute("user", user);
+        }
+        return "user/profile";
+    }
+
+    // Handle username update
+    @PostMapping("/profile/edit-username")
+    public String updateUsername(String newUsername, RedirectAttributes redirectAttributes, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
+
+            existingUser.setUsername(newUsername);
+            userService.update(existingUser);
+        }
+        return "redirect:/login?editSuccess=true";
+    }
+
+    // Handle email update
+    @PostMapping("/profile/edit-email")
+    public String updateEmail(String newEmail, RedirectAttributes redirectAttributes, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
+
+            existingUser.setEmail(newEmail);
+            userService.update(existingUser);
+        }
+        return "redirect:/profile?editSuccess=true";
+    }
+
+    // Handle password update
+    @PostMapping("/profile/edit-password")
+    public String updatePassword(String newPassword, String currentPassword, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
+
+            if (!userService.checkPassword(existingUser, currentPassword)) {
+                return "redirect:/profile?invalidPassword=true";
+            }
+
+            if (newPassword != null && !newPassword.isEmpty()) {
+                String encodedPassword = userService.encodePassword(newPassword);
+                existingUser.setPassword(encodedPassword);
+                userService.update(existingUser);
+            }
+        }
+        return "redirect:/login?editSuccess=true";
     }
 }
