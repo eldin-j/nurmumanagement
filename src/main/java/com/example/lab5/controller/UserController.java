@@ -24,9 +24,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Show the registration form
+    // Get the registration form
     @GetMapping("/signup")
-    public String showRegistrationForm(Model model) {
+    public String getRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "auth/signup";
     }
@@ -46,38 +46,22 @@ public class UserController {
         return "redirect:/success";
     }
 
-    // Show the success page after registration
+    // Get the success page after registration
     @GetMapping("/success")
-    public String showSuccessPage() {
+    public String getSuccessPage() {
         return "auth/success";
     }
 
-    // Show the login form
+    // Get the login form
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String getLoginForm() {
         return "auth/login";
     }
 
-    // For testing session management
-    @GetMapping("/test-session")
-    public String testSession(Model model, HttpSession session, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            User user = userRepository.findByUsername(authentication.getName())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("email", user.getEmail());
-            model.addAttribute("createdAt", user.getCreatedAt());
-            model.addAttribute("sessionId", session.getId());
-            model.addAttribute("sessionCreationTime", new Date(session.getCreationTime()));
-            model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
-        }
-        return "auth/test-session";
-    }
-
-    // Show the user profile
+    // Get the user profile
     @GetMapping("/profile")
-    public String showProfile(Model model, Authentication authentication) {
+    public String getProfile(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             User user = userService.getUserByUsername(authentication.getName());
             model.addAttribute("user", user);
@@ -126,5 +110,23 @@ public class UserController {
             }
         }
         return "redirect:/login?editSuccess=true";
+    }
+
+
+    // For testing session management
+    @GetMapping("/test-session")
+    public String testSession(Model model, HttpSession session, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("email", user.getEmail());
+            model.addAttribute("createdAt", user.getCreatedAt());
+            model.addAttribute("sessionId", session.getId());
+            model.addAttribute("sessionCreationTime", new Date(session.getCreationTime()));
+            model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
+        }
+        return "auth/test-session";
     }
 }

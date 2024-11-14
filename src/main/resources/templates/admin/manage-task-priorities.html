@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Task Priorities</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Manage Task Priorities</h1>
+    <form th:action="@{/admin/task-priorities/add}" th:object="${taskPriority}" method="post">
+        <input type="text" th:field="*{priority}" placeholder="Priority Name" required>
+        <button type="submit">Add Priority</button>
+    </form>
+    <table class="task-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="priority : ${priorities}">
+            <td th:text="${priority.id}"></td>
+            <td th:text="${priority.priority}"></td>
+            <td>
+                <form th:action="@{/admin/task-priorities/update/{id}(id=${priority.id})}" th:object="${priority}" method="post" style="display:inline;">
+                    <input type="text" th:field="*{priority}" required>
+                    <button type="submit">Update</button>
+                </form>
+                <a th:href="@{/admin/task-priorities/delete/{id}(id=${priority.id})}" class="delete-btn">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

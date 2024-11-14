@@ -14,18 +14,18 @@ public class TaskPriorityService {
     @Autowired
     private TaskPriorityRepository taskPriorityRepository;
 
-    // Retrieve all task priorities
+    // Get all task priorities
     public List<TaskPriority> getAllPriorities() {
         return taskPriorityRepository.findAll();
     }
 
-    // Retrieve a task priority by ID
+    // Get a task priority by ID
     public Optional<TaskPriority> getPriorityById(Long priorityId) {
         return taskPriorityRepository.findById(priorityId);
     }
 
-    // Add a new task priority
-    public TaskPriority addPriority(TaskPriority taskPriority) {
+    // Create a new task priority
+    public TaskPriority createPriority(TaskPriority taskPriority) {
         // Ensure priority name is unique before saving
         if (taskPriorityRepository.findByPriority(taskPriority.getPriority()).isPresent()) {
             throw new IllegalArgumentException("Task priority already exists");
@@ -33,7 +33,14 @@ public class TaskPriorityService {
         return taskPriorityRepository.save(taskPriority);
     }
 
-    // Delete a task priority by ID (optional functionality)
+    // Update an existing task priority
+    public TaskPriority updatePriority(Long id, TaskPriority updatedTaskPriority) {
+        TaskPriority taskPriority = taskPriorityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid priority ID"));
+        taskPriority.setPriority(updatedTaskPriority.getPriority());
+        return taskPriorityRepository.save(taskPriority);
+    }
+
+    // Delete a task priority by ID
     public void deletePriority(Long priorityId) {
         taskPriorityRepository.deleteById(priorityId);
     }

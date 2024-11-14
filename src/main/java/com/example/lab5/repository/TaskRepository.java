@@ -1,6 +1,6 @@
 package com.example.lab5.repository;
 
-import com.example.lab5.model.Category;
+import com.example.lab5.model.TaskCategory;
 import com.example.lab5.model.Task;
 import com.example.lab5.model.TaskStatus;
 import com.example.lab5.model.User;
@@ -22,7 +22,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByIdAndUser(Long id, User user);
 
     // Find tasks by user and category
-    List<Task> findByUserAndCategory(User user, Category category);
+    List<Task> findByUserAndCategory(User user, TaskCategory taskCategory);
 
     // Find tasks by user and status
     List<Task> findByUserAndStatus(User user, TaskStatus status);

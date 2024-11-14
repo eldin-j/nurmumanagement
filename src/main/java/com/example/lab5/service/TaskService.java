@@ -34,12 +34,12 @@ public class TaskService {
         return taskRepository.save(task); // Save task to the database
     }
 
-    // Retrieve all tasks for a specific user
+    // Get all tasks for a specific user
     public List<Task> getAllTasksForUser(User user) {
         return taskRepository.findByUser(user);
     }
 
-    // Retrieve a specific task by ID (ensuring it belongs to the authenticated user)
+    // Get a specific task by ID (ensuring it belongs to the authenticated user)
     public Optional<Task> getTaskByIdForUser(Long taskId, User user) {
         return taskRepository.findByIdAndUser(taskId, user);
     }

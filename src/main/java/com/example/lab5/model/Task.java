@@ -26,7 +26,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private TaskCategory category;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
@@ -77,11 +77,11 @@ public class Task {
         this.user = user;
     }
 
-    public Category getCategory() {
+    public TaskCategory getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(TaskCategory category) {
         this.category = category;
     }
 

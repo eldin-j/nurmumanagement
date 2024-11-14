@@ -14,31 +14,37 @@ public class TaskStatusService {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
-    // Retrieve all task statuses
+    // Get all task statuses
     public List<TaskStatus> getAllStatuses() {
         return taskStatusRepository.findAll();
     }
 
-    // Retrieve a task status by ID
+    // Get a task status by ID
     public Optional<TaskStatus> getStatusById(Long statusId) {
         return taskStatusRepository.findById(statusId);
     }
 
-    // Retrieve a task status by name
+    // Get a task status by name
     public Optional<TaskStatus> getStatusByName(String status) {
         return taskStatusRepository.findByStatus(status);
     }
 
-    // Add a new task status
-    public TaskStatus addStatus(TaskStatus taskStatus) {
-        // Ensure status name is unique before saving
+    // Create a new task status
+    public TaskStatus createStatus(TaskStatus taskStatus) {
         if (taskStatusRepository.findByStatus(taskStatus.getStatus()).isPresent()) {
             throw new IllegalArgumentException("Task status already exists");
         }
         return taskStatusRepository.save(taskStatus);
     }
 
-    // Delete a task status by ID (optional functionality)
+    // Update an existing task status
+    public TaskStatus updateStatus(Long id, TaskStatus updatedTaskStatus) {
+        TaskStatus taskStatus = taskStatusRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid status ID"));
+        taskStatus.setStatus(updatedTaskStatus.getStatus());
+        return taskStatusRepository.save(taskStatus);
+    }
+
+    // Delete a task status by ID
     public void deleteStatus(Long statusId) {
         taskStatusRepository.deleteById(statusId);
     }

@@ -22,15 +22,15 @@
 --     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 -- );
 --
--- -- Create the 'categories' table
--- CREATE TABLE categories (
+-- -- Create the 'task_categories' table
+-- CREATE TABLE task_categories (
 --     id SERIAL PRIMARY KEY,
 --     name VARCHAR(50) NOT NULL UNIQUE,
 --     description TEXT
 -- );
 --
--- -- Insert predefined categories into 'categories'
--- INSERT INTO categories (name, description) VALUES
+-- -- Insert predefined categories into 'task_categories'
+-- INSERT INTO task_categories (name, description) VALUES
 --     ('Work', 'Tasks related to work'),
 --     ('Personal', 'Personal tasks and errands'),
 --     ('Fitness', 'Fitness and health-related tasks'),
@@ -66,7 +66,7 @@
 --     description VARCHAR(1000),
 --     due_date DATE CHECK (due_date >= CURRENT_DATE),
 --     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
---     category_id INTEGER REFERENCES categories(id),
+--     category_id INTEGER REFERENCES task_categories(id),
 --     status_id INTEGER NOT NULL REFERENCES task_status(id),
 --     priority_id INTEGER NOT NULL REFERENCES task_priority(id)
 -- );

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Task Categories</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Manage Task Categories</h1>
+    <form th:action="@{/admin/task-categories/add}" th:object="${taskCategory}" method="post">
+        <input type="text" th:field="*{name}" placeholder="Category Name" required>
+        <button type="submit">Add Category</button>
+    </form>
+    <table class="task-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}">
+            <td th:text="${category.id}"></td>
+            <td th:text="${category.name}"></td>
+            <td>
+                <form th:action="@{/admin/task-categories/update/{id}(id=${category.id})}" th:object="${category}" method="post" style="display:inline;">
+                    <input type="text" th:field="*{name}" required>
+                    <button type="submit">Update</button>
+                </form>
+                <a th:href="@{/admin/task-categories/delete/{id}(id=${category.id})}" class="delete-btn">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
