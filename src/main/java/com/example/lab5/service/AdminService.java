@@ -72,25 +72,4 @@ public class AdminService {
     public void deleteTaskPriority(Long id) {
         taskPriorityService.deletePriority(id);
     }
-
-
-    // Get all task statuses
-    public List<TaskStatus> getAllTaskStatuses() {
-        return taskStatusService.getAllStatuses();
-    }
-
-    // Create a new task status
-    public TaskStatus createTaskStatus(TaskStatus taskStatus) {
-        return taskStatusService.createStatus(taskStatus);
-    }
-
-    // Edit an existing task status
-    public TaskStatus updateTaskStatus(Long id, TaskStatus updatedTaskStatus) {
-        return taskStatusService.updateStatus(id, updatedTaskStatus);
-    }
-
-    // Delete a task status by ID
-    public void deleteTaskStatus(Long id) {
-        taskStatusService.deleteStatus(id);
-    }
 }

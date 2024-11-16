@@ -94,34 +94,4 @@ public class AdminController {
         adminService.deleteTaskPriority(id);
         return "redirect:/admin/manage-task-priorities";
     }
-
-
-    // Get the manage task statuses page
-    @GetMapping("/manage-task-statuses")
-    public String getManageTaskStatuses(Model model) {
-        model.addAttribute("statuses", adminService.getAllTaskStatuses());
-        model.addAttribute("taskStatus", new TaskStatus());
-        return "admin/manage-task-statuses";
-    }
-
-    // Handle creating a new task status
-    @PostMapping("/task-statuses/add")
-    public String createTaskStatus(@ModelAttribute TaskStatus taskStatus) {
-        adminService.createTaskStatus(taskStatus);
-        return "redirect:/admin/manage-task-statuses";
-    }
-
-    // Handle updating an existing task status
-    @PostMapping("/task-statuses/update/{id}")
-    public String updateTaskStatus(@PathVariable Long id, @ModelAttribute TaskStatus taskStatus) {
-        adminService.updateTaskStatus(id, taskStatus);
-        return "redirect:/admin/manage-task-statuses";
-    }
-
-    // Handle deleting an existing task status
-    @GetMapping("/task-statuses/delete/{id}")
-    public String deleteTaskStatus(@PathVariable Long id) {
-        adminService.deleteTaskStatus(id);
-        return "redirect:/admin/manage-task-statuses";
-    }
 }
