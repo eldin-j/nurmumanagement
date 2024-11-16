@@ -9,32 +9,51 @@
 <body>
 <div class="container">
     <h1>Manage Task Categories</h1>
-    <form th:action="@{/admin/task-categories/add}" th:object="${taskCategory}" method="post">
-        <input type="text" th:field="*{name}" placeholder="Category Name" required>
-        <button type="submit">Add Category</button>
-    </form>
-    <table class="task-table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="category : ${categories}">
-            <td th:text="${category.id}"></td>
-            <td th:text="${category.name}"></td>
-            <td>
-                <form th:action="@{/admin/task-categories/update/{id}(id=${category.id})}" th:object="${category}" method="post" style="display:inline;">
-                    <input type="text" th:field="*{name}" required>
-                    <button type="submit">Update</button>
-                </form>
-                <a th:href="@{/admin/task-categories/delete/{id}(id=${category.id})}" class="delete-btn">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+    <!-- Add New Category Form -->
+    <hr>
+    <div>
+        <h2>Add New Category</h2>
+        <form th:action="@{/admin/task-categories/add}"
+              th:object="${taskCategory}" method="post"
+              class="action-bar">
+            <input placeholder="Category name" class="search-input"
+                   th:field="*{name}" id="name" required/>
+            <button type="submit">Add Category</button>
+        </form>
+    </div>
+
+    <!-- List of Existing Categories -->
+    <hr>
+    <div>
+        <h2>Existing Categories</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.name}"></td>
+                <td>
+                    <div class="action-bar">
+                        <form th:action="@{/admin/task-categories/update/{id}(id=${category.id})}"
+                              method="post">
+                            <input class="search-input" name="name"
+                                   th:placeholder="${category.name}" required/>
+                            <button type="submit">Update</button>
+                        </form>
+                        <a th:href="@{/admin/task-categories/delete/{id}(id=${category.id})}"
+                           onclick="return confirm('Are you sure you want to delete this category?')"
+                        >Delete</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

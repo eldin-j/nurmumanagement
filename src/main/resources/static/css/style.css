@@ -719,3 +719,16 @@ hr {
     border-top: 1px solid var(--color-border);
     margin: var(--spacing-sm) 0;
 }
+
+.action-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    justify-content: center;
+    z-index: 1000;
+}
+
+.action-bar > * {
+    display: flex;
+    align-items: center;
+}

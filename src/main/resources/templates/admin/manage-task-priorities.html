@@ -9,32 +9,55 @@
 <body>
 <div class="container">
     <h1>Manage Task Priorities</h1>
-    <form th:action="@{/admin/task-priorities/add}" th:object="${taskPriority}" method="post">
-        <input type="text" th:field="*{priority}" placeholder="Priority Name" required>
-        <button type="submit">Add Priority</button>
-    </form>
-    <table class="task-table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="priority : ${priorities}">
-            <td th:text="${priority.id}"></td>
-            <td th:text="${priority.priority}"></td>
-            <td>
-                <form th:action="@{/admin/task-priorities/update/{id}(id=${priority.id})}" th:object="${priority}" method="post" style="display:inline;">
-                    <input type="text" th:field="*{priority}" required>
-                    <button type="submit">Update</button>
-                </form>
-                <a th:href="@{/admin/task-priorities/delete/{id}(id=${priority.id})}" class="delete-btn">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+    <!-- Add New Priority Form -->
+    <hr>
+    <div>
+        <h2>Add New Priority</h2>
+        <form th:action="@{/admin/task-priorities/add}"
+              th:object="${taskPriority}" method="post"
+              class="action-bar">
+            <input placeholder="Priority name" class="search-input"
+                   th:field="*{priority}" required/>
+            <button type="submit">Add Priority</button>
+        </form>
+    </div>
+
+    <!-- List of Existing Priorities -->
+    <hr>
+    <div>
+        <h2>Existing Priorities</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Priority</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="priority : ${priorities}">
+                <td th:text="${priority.priority}"></td>
+                <td>
+                    <div class="action-bar">
+                        <!-- Update Form -->
+                        <form th:action="@{/admin/task-priorities/update/{id}(id=${priority.id})}"
+                              method="post">
+                            <input class="search-input" name="priority"
+                                   th:placeholder="${priority.priority}"
+                                   required/>
+                            <button type="submit">Update</button>
+                        </form>
+                        <!-- Delete Link -->
+                        <a th:href="@{/admin/task-priorities/delete/{id}(id=${priority.id})}"
+                           onclick="return confirm('Are you sure you want to delete this priority?')">
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

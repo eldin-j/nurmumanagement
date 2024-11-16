@@ -14,16 +14,16 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // Show the admin dashboard
+    // Get the admin dashboard
     @GetMapping
-    public String showAdminDashboard() {
+    public String getAdminDashboard() {
         return "admin/admin-dashboard";
     }
 
 
-    // Show the manage users page
+    // Get the manage users page
     @GetMapping("/manage-users")
-    public String showManageUsers(Model model) {
+    public String getManageUsers(Model model) {
         model.addAttribute("users", adminService.getAllUsers());
         return "admin/manage-users";
     }
@@ -36,9 +36,9 @@ public class AdminController {
     }
 
 
-    // Show the manage task categories page
+    // Get the manage task categories page
     @GetMapping("/manage-task-categories")
-    public String showManageTaskCategories(Model model) {
+    public String getManageTaskCategories(Model model) {
         model.addAttribute("categories", adminService.getAllTaskCategories());
         model.addAttribute("taskCategory", new TaskCategory());
         return "admin/manage-task-categories";
@@ -66,9 +66,9 @@ public class AdminController {
     }
 
 
-    // Show the manage task priorities page
+    // Get the manage task priorities page
     @GetMapping("/manage-task-priorities")
-    public String showManageTaskPriorities(Model model) {
+    public String getManageTaskPriorities(Model model) {
         model.addAttribute("priorities", adminService.getAllTaskPriorities());
         model.addAttribute("taskPriority", new TaskPriority());
         return "admin/manage-task-priorities";
@@ -96,10 +96,11 @@ public class AdminController {
     }
 
 
-    // Show the manage task statuses page
+    // Get the manage task statuses page
     @GetMapping("/manage-task-statuses")
-    public String showManageTaskStatuses(Model model) {
+    public String getManageTaskStatuses(Model model) {
         model.addAttribute("statuses", adminService.getAllTaskStatuses());
+        model.addAttribute("taskStatus", new TaskStatus());
         return "admin/manage-task-statuses";
     }
 
