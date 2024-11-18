@@ -93,7 +93,7 @@ public class TaskService {
 
     // Retrieve all tasks for a specific user with sorting by status and due date
     public Page<Task> getAllTasksForUserSorted(User user, Pageable pageable) {
-        return taskRepository.findByUserOrderByStatusStatusDescDueDateAsc(user, pageable);
+        return taskRepository.findByUserOrderByStatusStatusDescDueDateAscDueTimeAsc(user, pageable);
     }
 
     // Utility method: Validate that the due date is not in the past

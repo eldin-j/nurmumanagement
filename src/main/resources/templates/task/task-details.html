@@ -23,14 +23,26 @@
 <div class="container">
     <div class="task-details">
         <h1 th:text="${task.getTitle()}" class="task-title"></h1>
-        <p class="task-property"><strong>Description: </strong><span
-                th:text="${task.getDescription()}"></span></p>
-        <p class="task-property"><strong>Due Date: </strong><span
-                th:text="${#temporals.format(task.getDueDate(), 'E, MMM d, yyyy')}"></span></p>
-        <p class="task-property"><strong>Status: </strong><span
-                th:text="${task.getStatus()}"></span></p>
-        <p class="task-property"><strong>Priority: </strong><span
-                th:text="${task.getPriority()}"></span></p>
+        <p class="task-property" th:if="${!task.getDescription().isBlank()}">
+            <span th:text="${task.getDescription()}"></span>
+        </p>
+        <p class="task-property">
+            <strong>Due Date: </strong>
+            <span th:text="${#temporals.format(task.getDueDate(), 'E, MMM d, yyyy')}"></span>
+        </p>
+        <p class="task-property" th:if="${task.getDueTime() != null}">
+            <strong>Due Time: </strong>
+            <span th:if="${task.getDueTime() != null}"
+                  th:text="${#temporals.format(task.getDueTime(), 'HH:mm')}"></span>
+        </p>
+        <p class="task-property">
+            <strong>Status: </strong>
+            <span th:text="${task.getStatus()}"></span>
+        </p>
+        <p class="task-property">
+            <strong>Priority: </strong>
+            <span th:text="${task.getPriority()}"></span>
+        </p>
 
         <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
            class="btn btn-primary">Edit Task</a>

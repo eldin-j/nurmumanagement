@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
@@ -98,6 +99,13 @@ public class TaskController {
         return "task/task-edit";
     }
 
+    // Helper method to add form attributes
+    private void addFormAttributes(Model model) {
+        model.addAttribute("categories", taskCategoryService.getAllCategories());
+        model.addAttribute("statuses", taskStatusService.getAllStatuses());
+        model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+    }
+
     // Handle form submission for creating a new task
     @PostMapping
     public String createTask(@Valid @ModelAttribute("task") Task task,
@@ -105,18 +113,28 @@ public class TaskController {
                              Authentication authentication,
                              Model model) {
         if (result.hasErrors()) {
-            // Add necessary attributes for the form
-            model.addAttribute("categories", taskCategoryService.getAllCategories());
-            model.addAttribute("statuses", taskStatusService.getAllStatuses());
-            model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+            addFormAttributes(model);
             return "task/task-edit";
         }
+
         User user = userService.getUserByUsername(authentication.getName());
-        if (task.getDueDate().isBefore(LocalDate.now())) {
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate currentDate = now.toLocalDate();
+
+        if (task.getDueDate().isEqual(currentDate)) {
+            if (task.getDueTime() != null) {
+                LocalDateTime dueDateTime = LocalDateTime.of(task.getDueDate(), task.getDueTime());
+                if (dueDateTime.isBefore(now)) {
+                    result.rejectValue("dueTime", "error.task", "Due time must be in the future for today's tasks");
+                    addFormAttributes(model);
+                    return "task/task-edit";
+                }
+            }
+        }
+        else if (task.getDueDate().isBefore(currentDate)) {
             result.rejectValue("dueDate", "error.task", "Due date must be in the future");
-            model.addAttribute("categories", taskCategoryService.getAllCategories());
-            model.addAttribute("statuses", taskStatusService.getAllStatuses());
-            model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+            addFormAttributes(model);
             return "task/task-edit";
         }
 
@@ -126,9 +144,7 @@ public class TaskController {
             task.setStatus(defaultStatusOptional.get());
         } else {
             result.rejectValue("status", "error.task", "Default status not found");
-            model.addAttribute("categories", taskCategoryService.getAllCategories());
-            model.addAttribute("statuses", taskStatusService.getAllStatuses());
-            model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+            addFormAttributes(model);
             return "task/task-edit";
         }
 
@@ -150,9 +166,7 @@ public class TaskController {
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("task", task);
-        model.addAttribute("categories", taskCategoryService.getAllCategories());
-        model.addAttribute("statuses", taskStatusService.getAllStatuses());
-        model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+        addFormAttributes(model);
 
         return "task/task-edit";
     }
@@ -165,10 +179,7 @@ public class TaskController {
                            Authentication authentication,
                            Model model) {
         if (result.hasErrors()) {
-            // Add necessary attributes for the form
-            model.addAttribute("categories", taskCategoryService.getAllCategories());
-            model.addAttribute("statuses", taskStatusService.getAllStatuses());
-            model.addAttribute("priorities", taskPriorityService.getAllPriorities());
+            addFormAttributes(model);
             return "task/task-edit";
         }
 

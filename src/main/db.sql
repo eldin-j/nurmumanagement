@@ -65,6 +65,7 @@
 --     title VARCHAR(100) NOT NULL,
 --     description VARCHAR(1000),
 --     due_date DATE CHECK (due_date >= CURRENT_DATE),
+--     due_time TIMESTAMP,
 --     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 --     category_id INTEGER REFERENCES task_categories(id),
 --     status_id INTEGER NOT NULL REFERENCES task_status(id),

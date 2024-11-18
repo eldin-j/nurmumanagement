@@ -1,7 +1,9 @@
 package com.example.lab5.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "tasks")
@@ -19,6 +21,9 @@ public class Task {
 
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
+
+    @Column(name = "due_time")
+    private LocalTime dueTime;  // optional
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -67,6 +72,14 @@ public class Task {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public LocalTime getDueTime() {
+        return dueTime;
+    }
+
+    public void setDueTime(LocalTime dueTime) {
+        this.dueTime = dueTime;
     }
 
     public User getUser() {

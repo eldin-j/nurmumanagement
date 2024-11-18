@@ -44,7 +44,7 @@
             <tr>
                 <th class="table-cell">Title</th>
                 <th class="table-cell">Description</th>
-                <th class="table-cell">Due Date</th>
+                <th class="table-cell">Due to</th>
                 <th class="table-cell">Priority</th>
                 <th class="table-cell">Status</th>
             </tr>
@@ -57,10 +57,14 @@
                        class="task-link"></a>
                 </td>
                 <td class="table-cell" th:text="${task.getDescription()}"></td>
-                <td class="table-cell" th:text="${task.getDueDate()}"></td>
+                <td class="table-cell">
+                    <span th:text="${#temporals.format(task.getDueDate(), 'yyyy.MM.dd')}"></span>
+                    <span th:if="${task.getDueTime() != null}" th:text="${task.getDueTime()}"></span>
+                </td>
                 <td class="table-cell" th:text="${task.getPriority()}"></td>
                 <td class="table-cell">
-                    <span class="status-badge" th:classappend="'status-' + ${#strings.toLowerCase(task.getStatus().toString().replace(' ', '-'))}"
+                    <span class="status-badge"
+                          th:classappend="'status-' + ${#strings.toLowerCase(task.getStatus().toString().replace(' ', '-'))}"
                           th:text="${task.getStatus()}"></span>
                 </td>
             </tr>
@@ -70,8 +74,12 @@
         <!-- Pagination controls -->
         <div class="pagination">
             <div>
-                <a th:if="${currentPage > 0}" th:href="@{/tasks(page=${currentPage - 1}, search=${search})}" class="btn scroll-page-btn">Previous</a>
-                <a th:if="${currentPage < totalPages - 1}" th:href="@{/tasks(page=${currentPage + 1}, search=${search})}" class="btn scroll-page-btn">Next</a>
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/tasks(page=${currentPage - 1}, search=${search})}"
+                   class="btn scroll-page-btn">Previous</a>
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/tasks(page=${currentPage + 1}, search=${search})}"
+                   class="btn scroll-page-btn">Next</a>
             </div>
         </div>
     </div>
