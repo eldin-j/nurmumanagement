@@ -78,4 +78,13 @@ public class UserService implements UserDetailsService {
     public boolean emailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
+
+    // Helper method to update password by email (used in the forgot password feature)
+    public void updatePasswordByEmail(String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+        }
+    }
 }

@@ -17,7 +17,7 @@ public class Task {
     private String title;
 
     @Column(length = 1000)
-    private String description;
+    private String description; // optional
 
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;

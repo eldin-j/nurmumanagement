@@ -28,6 +28,9 @@
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required>
+                        <div class="auth-links input-links">
+                            <p>Forgot your password? <a th:href="@{/password-recovery}">Restore</a></p>
+                        </div>
                     </div>
                     <button type="submit" class="submit-btn">Log in</button>
                 </form>

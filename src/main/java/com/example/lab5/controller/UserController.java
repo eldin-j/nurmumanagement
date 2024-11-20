@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
@@ -128,5 +129,45 @@ public class UserController {
             model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
         }
         return "auth/test-session";
+    }
+
+    // Get the password recovery form
+    @GetMapping("/password-recovery")
+    public String getPasswordRecoveryForm() {
+        return "auth/password-recovery";
+    }
+
+    // Get the reset password form
+    @GetMapping("/reset-password")
+    public String getResetPasswordForm(@RequestParam("token") String token, Model model, HttpSession session) {
+        String sessionToken = (String) session.getAttribute("resetToken");
+        if (sessionToken == null || !sessionToken.equals(token)) {
+            model.addAttribute("error", "Invalid or expired token.");
+            return "auth/reset-password";
+        }
+        model.addAttribute("token", token);
+        return "auth/reset-password";
+    }
+
+    // Handle password recovery
+    @PostMapping("/reset-password")
+    public String handleResetPassword(@RequestParam("token") String token, @RequestParam("password") String password, Model model, HttpSession session) {
+        String sessionToken = (String) session.getAttribute("resetToken");
+        String email = (String) session.getAttribute("resetEmail");
+        if (sessionToken == null || !sessionToken.equals(token) || email == null) {
+            model.addAttribute("error", "Invalid or expired token.");
+            return "auth/reset-password";
+        }
+
+        if (password != null && !password.isEmpty()) {
+            userService.updatePasswordByEmail(email, password);
+            session.removeAttribute("resetToken");
+            session.removeAttribute("resetEmail");
+            model.addAttribute("message", "Password has been reset successfully.");
+        } else {
+            model.addAttribute("error", "Password cannot be empty.");
+        }
+
+        return "auth/reset-password";
     }
 }
