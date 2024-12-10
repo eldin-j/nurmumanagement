@@ -137,7 +137,7 @@ public class UserController {
         return "auth/password-recovery";
     }
 
-    // Get the reset password form
+    // Get the reset password form (accessed via email link)
     @GetMapping("/reset-password")
     public String getResetPasswordForm(@RequestParam("token") String token, Model model, HttpSession session) {
         String sessionToken = (String) session.getAttribute("resetToken");
@@ -149,7 +149,7 @@ public class UserController {
         return "auth/reset-password";
     }
 
-    // Handle password recovery
+    // Handle password reset request
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam("token") String token, @RequestParam("password") String password, Model model, HttpSession session) {
         String sessionToken = (String) session.getAttribute("resetToken");
