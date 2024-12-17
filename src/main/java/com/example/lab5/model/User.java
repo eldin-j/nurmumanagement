@@ -22,6 +22,10 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -57,5 +61,13 @@ public class User {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
     }
 }

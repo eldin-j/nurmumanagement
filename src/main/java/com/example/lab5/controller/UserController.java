@@ -9,11 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Controller
@@ -25,14 +25,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Get the registration form
     @GetMapping("/signup")
     public String getRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "auth/signup";
     }
 
-    // Handle form submission for user registration
     @PostMapping("/signup")
     public String registerUser(User user, RedirectAttributes redirectAttributes) {
         if (userService.usernameExists(user.getUsername())) {
@@ -47,54 +45,46 @@ public class UserController {
         return "redirect:/success";
     }
 
-    // Get the success page after registration
     @GetMapping("/success")
     public String getSuccessPage() {
         return "auth/success";
     }
 
-    // Get the login form
     @GetMapping("/login")
     public String getLoginForm() {
         return "auth/login";
     }
 
-
-    // Get the user profile
     @GetMapping("/profile")
     public String getProfile(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             User user = userService.getUserByUsername(authentication.getName());
             model.addAttribute("user", user);
+            model.addAttribute("avatarUrl", "/avatar/" + user.getUsername()); // Добавлен URL аватара
         }
         return "user/profile";
     }
 
-    // Handle username update
     @PostMapping("/profile/edit-username")
     public String updateUsername(String newUsername, RedirectAttributes redirectAttributes, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             User existingUser = userService.getUserByUsername(authentication.getName());
-
             existingUser.setUsername(newUsername);
             userService.update(existingUser);
         }
         return "redirect:/login?editSuccess=true";
     }
 
-    // Handle email update
     @PostMapping("/profile/edit-email")
     public String updateEmail(String newEmail, RedirectAttributes redirectAttributes, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             User existingUser = userService.getUserByUsername(authentication.getName());
-
             existingUser.setEmail(newEmail);
             userService.update(existingUser);
         }
         return "redirect:/profile?editSuccess=true";
     }
 
-    // Handle password update
     @PostMapping("/profile/edit-password")
     public String updatePassword(String newPassword, String currentPassword, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
@@ -113,8 +103,6 @@ public class UserController {
         return "redirect:/login?editSuccess=true";
     }
 
-
-    // For testing session management
     @GetMapping("/test-session")
     public String testSession(Model model, HttpSession session, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
@@ -131,13 +119,11 @@ public class UserController {
         return "auth/test-session";
     }
 
-    // Get the password recovery form
     @GetMapping("/password-recovery")
     public String getPasswordRecoveryForm() {
         return "auth/password-recovery";
     }
 
-    // Get the reset password form (accessed via email link)
     @GetMapping("/reset-password")
     public String getResetPasswordForm(@RequestParam("token") String token, Model model, HttpSession session) {
         String sessionToken = (String) session.getAttribute("resetToken");
@@ -149,7 +135,6 @@ public class UserController {
         return "auth/reset-password";
     }
 
-    // Handle password reset request
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam("token") String token, @RequestParam("password") String password, Model model, HttpSession session) {
         String sessionToken = (String) session.getAttribute("resetToken");
@@ -169,5 +154,26 @@ public class UserController {
         }
 
         return "auth/reset-password";
+    }
+
+    @PostMapping("/upload-avatar")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, Authentication authentication) {
+        try {
+            User user = userService.getUserByUsername(authentication.getName());
+            user.setAvatar(file.getBytes());
+            userService.saveUser(user);
+            System.out.println("Avatar uploaded successfully for user: " + user.getUsername());
+            return "redirect:/profile";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/error";
+        }
+    }
+
+    @GetMapping("/avatar/{username}")
+    @ResponseBody
+    public byte[] getAvatar(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return user.getAvatar();
     }
 }
