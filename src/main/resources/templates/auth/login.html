@@ -7,48 +7,56 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div class="auth-container">
-        <!-- Left side with app info -->
-        <div class="auth-info">
-            <div class="info-content">
-                <h1 class="app-title">Nurmumanagement</h1>
-                <p class="app-description">Manage your tasks with ease. Stay organized, focused, and productive with our intuitive task management solution.</p>
-            </div>
+<div class="auth-container">
+    <!-- Left side with app info -->
+    <div class="auth-info">
+        <div class="info-content">
+            <h1 class="app-title">Nurmumanagement</h1>
+            <p class="app-description">Manage your tasks with ease. Stay organized, focused, and productive with our intuitive task management solution.</p>
         </div>
+    </div>
 
-        <!-- Right side with form -->
-        <div class="auth-form">
-            <div class="form-container">
-                <h2 class="form-title">Log in</h2>
-                <form action="#" th:action="@{/login}" method="post">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                        <div class="auth-links input-links">
-                            <p>Forgot your password? <a th:href="@{/password-recovery}">Restore</a></p>
-                        </div>
-                    </div>
-                    <button type="submit" class="submit-btn">Log in</button>
-                </form>
-                <div class="auth-links">
-                    <p>Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
+    <!-- Right side with form -->
+    <div class="auth-form">
+        <div class="form-container">
+            <h2 class="form-title">Log in</h2>
+            <!-- Новая форма для логина -->
+            <form th:action="@{/login}" method="post">
+                <label>Username:</label>
+                <input type="text" name="username" required />
+                <label>Password:</label>
+                <input type="password" name="password" required />
+
+                <!-- Поле для 2FA-кода (показывается только если включено 2FA) -->
+                <div th:if="${twoFactorEnabled}">
+                    <label for="twoFactorCode">2FA Code:</label>
+                    <input type="text" id="twoFactorCode" name="twoFactorCode" placeholder="Enter 2FA code" />
                 </div>
-                <div th:if="${param.error}" class="error-message">
-                    <p>Incorrect username or password.</p>
-                </div>
-                <div th:if="${param.expired}" class="error-message">
-                    <p class="error">Your session has expired. Please log in again.</p>
-                </div>
-                <div th:if="${param.editSuccess}" class="success-message">
-                    <p class="error">Account credentials updated successfully! </p>
-                    <p class="error">Please log in again.</p>
-                </div>
+
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+
+            <!-- Обработка ошибок -->
+            <div th:if="${param.error}" style="color: red;">
+                <p>Incorrect username or password.</p>
+            </div>
+            <div th:if="${error}" style="color: red;">
+                <p th:text="${error}"></p>
+            </div>
+            <div th:if="${param.expired}" class="error-message">
+                <p>Your session has expired. Please log in again.</p>
+            </div>
+            <div th:if="${param.editSuccess}" class="success-message">
+                <p>Account credentials updated successfully!</p>
+                <p>Please log in again.</p>
+            </div>
+
+            <div class="auth-links">
+                <p>Forgot your password? <a th:href="@{/password-recovery}">Restore</a></p>
+                <p>Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

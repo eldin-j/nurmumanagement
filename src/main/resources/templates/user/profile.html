@@ -71,6 +71,27 @@
         <div th:if="${param.editSuccess}" class="success-message">
             <p class="error">Account credentials updated successfully!</p>
         </div>
+        <hr>
+
+        <!-- Статус двухфакторной аутентификации -->
+        <div class="profile-property">
+            <h3>Two-Factor Authentication Status:</h3>
+            <p th:if="${user.twoFactorEnabled}" style="color: green;">Enabled</p>
+            <p th:if="${!user.twoFactorEnabled}" style="color: red;">Disabled</p>
+        </div>
+
+        <!-- Формы для включения и отключения двухфакторной аутентификации с CSRF -->
+        <div class="profile-property">
+            <h3>Two-Factor Authentication</h3>
+            <form action="/enable-2fa" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-primary">Enable 2FA</button>
+            </form>
+            <form action="/disable-2fa" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-secondary">Disable 2FA</button>
+            </form>
+        </div>
     </div>
 
     <!-- Форма для загрузки аватара -->

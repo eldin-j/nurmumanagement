@@ -59,6 +59,22 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    // Enable two-factor authentication
+    @Transactional
+    public void enableTwoFactorAuthentication(String username) {
+        User user = getUserByUsername(username);
+        user.setTwoFactorEnabled(true);
+        userRepository.save(user);
+    }
+
+    // Disable two-factor authentication
+    @Transactional
+    public void disableTwoFactorAuthentication(String username) {
+        User user = getUserByUsername(username);
+        user.setTwoFactorEnabled(false);
+        userRepository.save(user);
+    }
+
     // Load user by username
     @Override
     @Transactional(readOnly = true)

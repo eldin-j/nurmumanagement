@@ -24,6 +24,10 @@ public class SecurityConfig {
                                 "/success",
                                 "/password-recovery",
                                 "/reset-password",
+                                "/2fa",
+                                "/verify-2fa",
+                                "/enable-2fa",
+                                "/disable-2fa",
                                 "/css/**"
                         ).permitAll() // Разрешить публичный доступ к этим путям
                         .requestMatchers("/upload-avatar", "/avatar/**").authenticated() // Доступ только авторизованным пользователям
@@ -31,7 +35,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/tasks", true)
+                        .defaultSuccessUrl("/profile", true)
                         .failureUrl("/login?error=true")
                         .permitAll() // Разрешить доступ ко странице входа
                 )
