@@ -35,8 +35,7 @@
             </form>
         </div>
 
-<!--        todo fix-->
-        <div th:if="${#lists.isEmpty(tasks)}" class="error-message">
+        <div th:if="${#lists.isEmpty(tasks) && !#strings.isEmpty(search)}" class="error-message">
             <p class="error">No tasks found for the search query.</p>
         </div>
 
