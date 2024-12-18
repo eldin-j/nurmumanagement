@@ -2,7 +2,7 @@ package com.example.lab5.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
+// simple table created
 @Entity
 @Table(name = "users")
 public class User {
