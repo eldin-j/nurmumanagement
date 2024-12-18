@@ -22,13 +22,6 @@
     <div class="profile-details">
         <h1 class="task-title">Account settings</h1>
 
-        <!-- Отображение аватарки пользователя -->
-        <div class="avatar-preview">
-            <h3>Current Avatar</h3>
-            <img th:src="${avatarUrl}" alt="User Avatar" class="avatar-img" />
-        </div>
-        <hr>
-
         <div class="profile-property">
             <div class="attribute-container">
                 <span><strong>Username: </strong></span><span th:text="${user.username}"></span>
@@ -63,6 +56,7 @@
             <input type="password" name="currentPassword" placeholder="Current password" class="form-control">
             <input type="password" name="newPassword" placeholder="New password" class="form-control">
             <button type="submit" class="btn btn-primary">Save</button>
+
         </form>
 
         <div th:if="${param.invalidPassword}" class="error-message">
@@ -71,38 +65,6 @@
         <div th:if="${param.editSuccess}" class="success-message">
             <p class="error">Account credentials updated successfully!</p>
         </div>
-        <hr>
-
-        <!-- Статус двухфакторной аутентификации -->
-        <div class="profile-property">
-            <h3>Two-Factor Authentication Status:</h3>
-            <p th:if="${user.twoFactorEnabled}" style="color: green;">Enabled</p>
-            <p th:if="${!user.twoFactorEnabled}" style="color: red;">Disabled</p>
-        </div>
-
-        <!-- Формы для включения и отключения двухфакторной аутентификации с CSRF -->
-        <div class="profile-property">
-            <h3>Two-Factor Authentication</h3>
-            <form action="/enable-2fa" method="post">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <button type="submit" class="btn btn-primary">Enable 2FA</button>
-            </form>
-            <form action="/disable-2fa" method="post">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <button type="submit" class="btn btn-secondary">Disable 2FA</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Форма для загрузки аватара -->
-    <div class="profile-upload">
-        <h2>Upload Avatar</h2>
-        <form action="/upload-avatar" method="post" enctype="multipart/form-data" th:action="@{/upload-avatar}">
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-            <label for="avatar">Upload Avatar:</label>
-            <input type="file" id="avatar" name="avatar" accept="image/*" />
-            <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
     </div>
 </div>
 </body>

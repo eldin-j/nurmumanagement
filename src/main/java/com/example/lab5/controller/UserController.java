@@ -3,18 +3,18 @@ package com.example.lab5.controller;
 import com.example.lab5.model.User;
 import com.example.lab5.repository.UserRepository;
 import com.example.lab5.service.UserService;
-import com.example.lab5.service.TwoFactorAuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
+import java.util.Date;
 
 @Controller
 public class UserController {
@@ -25,16 +25,14 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TwoFactorAuthService twoFactorAuthService;
-
-    // Регистрация пользователя
+    // Get the registration form
     @GetMapping("/signup")
     public String getRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "auth/signup";
     }
 
+    // Handle form submission for user registration
     @PostMapping("/signup")
     public String registerUser(User user, RedirectAttributes redirectAttributes) {
         if (userService.usernameExists(user.getUsername())) {
@@ -49,121 +47,127 @@ public class UserController {
         return "redirect:/success";
     }
 
-    // Страница успеха
+    // Get the success page after registration
     @GetMapping("/success")
     public String getSuccessPage() {
         return "auth/success";
     }
 
-    // Страница логина
+    // Get the login form
     @GetMapping("/login")
     public String getLoginForm() {
         return "auth/login";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, Model model, HttpSession session) {
-        User user = userService.getUserByUsername(username);
 
-        if (user != null && userService.checkPassword(user, password)) {
-            if (user.isTwoFactorEnabled()) {
-                // Генерируем временный код и сохраняем в сессии
-                String generatedCode = twoFactorAuthService.generate2FACode();
-                session.setAttribute("2faCode", generatedCode);
-                session.setAttribute("2faUsername", username);
-
-                // Отправляем код пользователю (e.g., email/SMS)
-                twoFactorAuthService.send2FACode(user.getEmail(), generatedCode);
-
-                return "redirect:/2fa"; // Перенаправление на страницу ввода кода
-            }
-            // Если 2FA выключен, пользователь сразу входит
-            return "redirect:/profile";
-        } else {
-            model.addAttribute("error", "Invalid username or password");
-            return "auth/login";
-        }
-    }
-
-    // Страница для ввода 2FA-кода
-    @GetMapping("/2fa")
-    public String getTwoFactorPage(Model model, HttpSession session) {
-        String username = (String) session.getAttribute("2faUsername");
-        if (username != null) {
-            model.addAttribute("username", username);
-            return "auth/2fa";
-        }
-        return "redirect:/login";
-    }
-
-    @PostMapping("/verify-2fa")
-    public String verifyTwoFactorCode(@RequestParam String twoFactorCode, HttpSession session, Model model) {
-        String generatedCode = (String) session.getAttribute("2faCode");
-        String username = (String) session.getAttribute("2faUsername");
-
-        if (generatedCode != null && generatedCode.equals(twoFactorCode)) {
-            session.removeAttribute("2faCode");
-            session.removeAttribute("2faUsername");
-            return "redirect:/profile";
-        } else {
-            model.addAttribute("error", "Invalid 2FA code");
-            model.addAttribute("username", username);
-            return "auth/2fa";
-        }
-    }
-
-    // Профиль пользователя
+    // Get the user profile
     @GetMapping("/profile")
     public String getProfile(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             User user = userService.getUserByUsername(authentication.getName());
             model.addAttribute("user", user);
-            model.addAttribute("avatarUrl", "/avatar/" + user.getUsername());
-            model.addAttribute("twoFactorStatus", user.isTwoFactorEnabled()); // Передача статуса 2FA
         }
         return "user/profile";
     }
 
-    // Включение 2FA
-    @PostMapping("/enable-2fa")
-    public String enableTwoFactorAuthentication(Authentication authentication) {
-        userService.enableTwoFactorAuthentication(authentication.getName());
-        return "redirect:/profile";
-    }
+    // Handle username update
+    @PostMapping("/profile/edit-username")
+    public String updateUsername(String newUsername, RedirectAttributes redirectAttributes, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
 
-    // Отключение 2FA
-    @PostMapping("/disable-2fa")
-    public String disableTwoFactorAuthentication(Authentication authentication) {
-        userService.disableTwoFactorAuthentication(authentication.getName());
-        return "redirect:/profile";
-    }
-
-    // Проверка статуса 2FA
-    @GetMapping("/2fa-status")
-    @ResponseBody
-    public String getTwoFactorStatus(Authentication authentication) {
-        User user = userService.getUserByUsername(authentication.getName());
-        return user.isTwoFactorEnabled() ? "Two-Factor Authentication is ENABLED" : "Two-Factor Authentication is DISABLED";
-    }
-
-    // Загрузка аватара
-    @PostMapping("/upload-avatar")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, Authentication authentication) {
-        try {
-            User user = userService.getUserByUsername(authentication.getName());
-            user.setAvatar(file.getBytes());
-            userService.saveUser(user);
-            return "redirect:/profile";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "redirect:/error";
+            existingUser.setUsername(newUsername);
+            userService.update(existingUser);
         }
+        return "redirect:/login?editSuccess=true";
     }
 
-    @GetMapping("/avatar/{username}")
-    @ResponseBody
-    public byte[] getAvatar(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
-        return user.getAvatar();
+    // Handle email update
+    @PostMapping("/profile/edit-email")
+    public String updateEmail(String newEmail, RedirectAttributes redirectAttributes, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
+
+            existingUser.setEmail(newEmail);
+            userService.update(existingUser);
+        }
+        return "redirect:/profile?editSuccess=true";
+    }
+
+    // Handle password update
+    @PostMapping("/profile/edit-password")
+    public String updatePassword(String newPassword, String currentPassword, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User existingUser = userService.getUserByUsername(authentication.getName());
+
+            if (!userService.checkPassword(existingUser, currentPassword)) {
+                return "redirect:/profile?invalidPassword=true";
+            }
+
+            if (newPassword != null && !newPassword.isEmpty()) {
+                String encodedPassword = userService.encodePassword(newPassword);
+                existingUser.setPassword(encodedPassword);
+                userService.update(existingUser);
+            }
+        }
+        return "redirect:/login?editSuccess=true";
+    }
+
+
+    // For testing session management
+    @GetMapping("/test-session")
+    public String testSession(Model model, HttpSession session, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("email", user.getEmail());
+            model.addAttribute("createdAt", user.getCreatedAt());
+            model.addAttribute("sessionId", session.getId());
+            model.addAttribute("sessionCreationTime", new Date(session.getCreationTime()));
+            model.addAttribute("sessionLastAccessedTime", new Date(session.getLastAccessedTime()));
+        }
+        return "auth/test-session";
+    }
+
+    // Get the password recovery form
+    @GetMapping("/password-recovery")
+    public String getPasswordRecoveryForm() {
+        return "auth/password-recovery";
+    }
+
+    // Get the reset password form (accessed via email link)
+    @GetMapping("/reset-password")
+    public String getResetPasswordForm(@RequestParam("token") String token, Model model, HttpSession session) {
+        String sessionToken = (String) session.getAttribute("resetToken");
+        if (sessionToken == null || !sessionToken.equals(token)) {
+            model.addAttribute("error", "Invalid or expired token.");
+            return "auth/reset-password";
+        }
+        model.addAttribute("token", token);
+        return "auth/reset-password";
+    }
+
+    // Handle password reset request
+    @PostMapping("/reset-password")
+    public String handleResetPassword(@RequestParam("token") String token, @RequestParam("password") String password, Model model, HttpSession session) {
+        String sessionToken = (String) session.getAttribute("resetToken");
+        String email = (String) session.getAttribute("resetEmail");
+        if (sessionToken == null || !sessionToken.equals(token) || email == null) {
+            model.addAttribute("error", "Invalid or expired token.");
+            return "auth/reset-password";
+        }
+
+        if (password != null && !password.isEmpty()) {
+            userService.updatePasswordByEmail(email, password);
+            session.removeAttribute("resetToken");
+            session.removeAttribute("resetEmail");
+            model.addAttribute("message", "Password has been reset successfully.");
+        } else {
+            model.addAttribute("error", "Password cannot be empty.");
+        }
+
+        return "auth/reset-password";
     }
 }

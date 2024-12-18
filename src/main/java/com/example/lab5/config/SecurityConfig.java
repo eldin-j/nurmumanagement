@@ -17,40 +17,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/signup",
-                                "/login",
-                                "/success",
-                                "/password-recovery",
-                                "/reset-password",
-                                "/2fa",
-                                "/verify-2fa",
-                                "/enable-2fa",
-                                "/disable-2fa",
-                                "/css/**"
-                        ).permitAll() // Разрешить публичный доступ к этим путям
-                        .requestMatchers("/upload-avatar", "/avatar/**").authenticated() // Доступ только авторизованным пользователям
-                        .anyRequest().authenticated() // Для всех остальных запросов требуется аутентификация
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/profile", true)
-                        .failureUrl("/login?error=true")
-                        .permitAll() // Разрешить доступ ко странице входа
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout=true")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll() // Разрешить выход всем пользователям
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/login?expired=true") // Перенаправление при недействительной сессии
-                        .maximumSessions(1) // Лимит одной сессии на пользователя
-                        .expiredUrl("/login?expired=true") // Перенаправление при истечении сессии
-                );
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/signup", "/login", "/success", "password-recovery", "/reset-password", "/css/**").permitAll() // Permit these paths
+                .anyRequest().authenticated() // Require authentication for any other requests
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/tasks", true)
+                .failureUrl("/login?error=true")
+                .permitAll() // Allow all to access the login page
+            )
+            .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll() // Allow all to access logout
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionUrl("/login?expired=true") // Redirect when session is invalid
+                .maximumSessions(1) // Limit to one session per user
+                .expiredUrl("/login?expired=true") // Redirect when session expires
+            );
 
         return http.build();
     }

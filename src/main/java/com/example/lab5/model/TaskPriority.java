@@ -2,7 +2,7 @@ package com.example.lab5.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-// simple table created
+
 @Entity
 @Table(name = "task_priority")
 public class TaskPriority {

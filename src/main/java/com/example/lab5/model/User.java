@@ -2,7 +2,7 @@ package com.example.lab5.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-// simple table created
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,13 +21,6 @@ public class User {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Lob
-    @Column(name = "avatar")
-    private byte[] avatar;
-
-    @Column(name = "two_factor_enabled", nullable = false)
-    private boolean twoFactorEnabled = false;
 
     // Getters and Setters
     public Long getId() {
@@ -64,21 +57,5 @@ public class User {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public byte[] getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(byte[] avatar) {
-        this.avatar = avatar;
-    }
-
-    public boolean isTwoFactorEnabled() {
-        return twoFactorEnabled;
-    }
-
-    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
-        this.twoFactorEnabled = twoFactorEnabled;
     }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-// simple table created
+
 @Entity
 @Table(name = "tasks")
 public class Task {
