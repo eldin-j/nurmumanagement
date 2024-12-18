@@ -1,5 +1,7 @@
 package com.example.lab5.controller;
 
+// It was my job
+
 import com.example.lab5.model.Task;
 import com.example.lab5.model.User;
 import com.example.lab5.service.EmailService;
@@ -89,3 +91,4 @@ public class EmailController {
         }
     }
 }
+
