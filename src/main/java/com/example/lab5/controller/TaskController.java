@@ -166,7 +166,8 @@ public class TaskController {
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("task", task);
-        addFormAttributes(model);
+        model.addAttribute("categories", taskCategoryService.getAllCategories());
+        model.addAttribute("priorities", taskPriorityService.getAllPriorities());
 
         return "task/task-edit";
     }
@@ -195,7 +196,7 @@ public class TaskController {
         existingTask.setTitle(updatedTask.getTitle());
         existingTask.setDescription(updatedTask.getDescription());
         existingTask.setDueDate(updatedTask.getDueDate());
-        existingTask.setCategory(updatedTask.getCategory());
+        existingTask.setCategories(updatedTask.getCategories());
         existingTask.setStatus(updatedTask.getStatus());
         existingTask.setPriority(updatedTask.getPriority());
 

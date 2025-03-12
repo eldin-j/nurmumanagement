@@ -757,3 +757,20 @@ hr {
     display: flex;
     align-items: center;
 }
+
+.categories-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Left-aligns all content */
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjusts spacing between checkbox and label */
+    margin-bottom: 8px; /* Optional spacing between items */
+}
+
+.category-item input[type="checkbox"] {
+    margin: 0;
+}

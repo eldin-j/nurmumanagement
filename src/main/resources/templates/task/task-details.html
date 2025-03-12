@@ -43,6 +43,11 @@
             <strong>Priority: </strong>
             <span th:text="${task.getPriority()}"></span>
         </p>
+        <p class="task-property" th:if="${not #lists.isEmpty(task.getCategories())}">
+            <strong>Categories: </strong>
+            <span th:each="category : ${task.getCategories()}"
+                  th:text="${category.getName()} + ' '"></span>
+        </p>
 
         <a th:href="@{/tasks/edit/{id}(id=${task.getId()})}"
            class="btn btn-primary">Edit Task</a>

@@ -1,7 +1,7 @@
 package com.example.lab5.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "task_categories")
@@ -14,12 +14,11 @@ public class TaskCategory {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(length = 250)
+    @Column(length = 1000)
     private String description;
 
-    // Relationship with tasks for querying purposes
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Task> tasks;
+    @ManyToMany(mappedBy = "categories")
+    private Set<Task> tasks;
 
     // Getters and Setters
     public Long getId() {
@@ -46,11 +45,11 @@ public class TaskCategory {
         this.description = description;
     }
 
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 }

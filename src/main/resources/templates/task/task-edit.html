@@ -53,15 +53,15 @@
             </div>
 
             <div>
-                <label for="category" class="form-label">Category</label>
-                <select class="form-select" id="category"
-                        th:field="*{category.id}"
-                        required>
-                    <option value="">Select a category</option>
-                    <option th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"></option>
-                </select>
+                <label for="categories" class="form-label">Categories</label>
+                <div class="categories-container">
+                    <div th:each="category : ${categories}" class="category-item">
+                        <input type="checkbox" th:field="*{categories}" th:value="${category.id}"
+                               th:id="${'category_' + category.id}"
+                               th:checked="${task.getCategories() != null and task.getCategories().contains(category)}">
+                        <label th:for="${'category_' + category.id}" th:text="${category.name}"></label>
+                    </div>
+                </div>
             </div>
 
             <div>

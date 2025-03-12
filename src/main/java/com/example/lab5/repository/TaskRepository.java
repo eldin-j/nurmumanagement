@@ -1,7 +1,7 @@
 package com.example.lab5.repository;
 
-import com.example.lab5.model.TaskCategory;
 import com.example.lab5.model.Task;
+import com.example.lab5.model.TaskCategory;
 import com.example.lab5.model.TaskStatus;
 import com.example.lab5.model.User;
 import org.springframework.data.domain.Page;
@@ -22,13 +22,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByIdAndUser(Long id, User user);
 
     // Find tasks by user and category
-    List<Task> findByUserAndCategory(User user, TaskCategory taskCategory);
+    List<Task> findByUserAndCategories(User user, TaskCategory taskCategory);
 
     // Find tasks by user and status
     List<Task> findByUserAndStatus(User user, TaskStatus status);
 
     // Find tasks by user, filtered by status or category (using OR condition)
-    List<Task> findByUserAndStatusIdOrCategoryId(User user, Long statusId, Long categoryId);
+    List<Task> findByUserAndStatusIdOrCategoriesId(User user, Long statusId, Long categoryId);
 
     // Find tasks by user and sort by due date
     List<Task> findByUserOrderByDueDateAsc(User user);
@@ -40,7 +40,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Page<Task> findByUser(User user, Pageable pageable);
 
     // Find tasks by user, status, and category with pagination
-    Page<Task> findByUserAndStatusIdOrCategoryId(User user, Long statusId, Long categoryId, Pageable pageable);
+    Page<Task> findByUserAndStatusIdOrCategoriesId(User user, Long statusId, Long categoryId, Pageable pageable);
 
     // Find tasks by user and sort by status and due date ascending
     Page<Task> findByUserOrderByStatusStatusDescDueDateAscDueTimeAsc(User user, Pageable pageable);

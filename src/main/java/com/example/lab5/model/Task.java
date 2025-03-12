@@ -1,9 +1,9 @@
 package com.example.lab5.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -30,16 +30,20 @@ public class Task {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private TaskCategory category;
-
-    @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private TaskStatus status;
 
     @ManyToOne
     @JoinColumn(name = "priority_id", nullable = false)
     private TaskPriority priority;
+
+    @ManyToMany
+    @JoinTable(
+            name = "task_category_mapping",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<TaskCategory> categories;
 
     // Getters and Setters
     public Long getId() {
@@ -90,14 +94,6 @@ public class Task {
         this.user = user;
     }
 
-    public TaskCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(TaskCategory category) {
-        this.category = category;
-    }
-
     public TaskStatus getStatus() {
         return status;
     }
@@ -112,5 +108,13 @@ public class Task {
 
     public void setPriority(TaskPriority priority) {
         this.priority = priority;
+    }
+
+    public Set<TaskCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<TaskCategory> categories) {
+        this.categories = categories;
     }
 }

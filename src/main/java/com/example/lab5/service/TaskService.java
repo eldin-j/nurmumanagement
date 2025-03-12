@@ -53,7 +53,7 @@ public class TaskService {
         existingTask.setTitle(updatedTask.getTitle());
         existingTask.setDescription(updatedTask.getDescription());
         existingTask.setDueDate(validateDueDate(updatedTask.getDueDate()));
-        existingTask.setCategory(updatedTask.getCategory());
+        existingTask.setCategories(updatedTask.getCategories());
         existingTask.setStatus(updatedTask.getStatus());
         existingTask.setPriority(updatedTask.getPriority());
 
@@ -73,8 +73,8 @@ public class TaskService {
     }
 
     // Filter tasks by status or category for a specific user
-    public List<Task> filterTasksByStatusOrCategory(User user, Long statusId, Long categoryId) {
-        return taskRepository.findByUserAndStatusIdOrCategoryId(user, statusId, categoryId);
+    public List<Task> filterTasksByStatusOrCategories(User user, Long statusId, Long categoryId) {
+        return taskRepository.findByUserAndStatusIdOrCategoriesId(user, statusId, categoryId);
     }
 
     // Retrieve all tasks for a specific user with pagination
@@ -84,7 +84,7 @@ public class TaskService {
 
     // Filter tasks by status or category for a specific user with pagination
     public Page<Task> filterTasksByStatusOrCategory(User user, Long statusId, Long categoryId, Pageable pageable) {
-        return taskRepository.findByUserAndStatusIdOrCategoryId(user, statusId, categoryId, pageable);
+        return taskRepository.findByUserAndStatusIdOrCategoriesId(user, statusId, categoryId, pageable);
     }
 
     public Page<Task> searchTasks(User user, String search, Pageable pageable) {

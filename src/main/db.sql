@@ -67,7 +67,13 @@
 --     due_date DATE CHECK (due_date >= CURRENT_DATE),
 --     due_time TIMESTAMP,
 --     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
---     category_id INTEGER REFERENCES task_categories(id),
 --     status_id INTEGER NOT NULL REFERENCES task_status(id),
 --     priority_id INTEGER NOT NULL REFERENCES task_priority(id)
+-- );
+--
+-- -- Create the 'task_category_mapping' table to establish many-to-many relationship
+-- CREATE TABLE task_category_mapping (
+--     task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+--     category_id INTEGER NOT NULL REFERENCES task_categories(id) ON DELETE CASCADE,
+--     PRIMARY KEY (task_id, category_id)
 -- );
